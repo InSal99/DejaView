@@ -168,7 +168,7 @@ If B0 shows Indonesian works directly, skip translation today.
 ## Targets
 - `DejaView` — the app. Display name: `Déjà View` (`INFOPLIST_KEY_CFBundleDisplayName`).
 - `DejaViewShare` — Share Extension. Display name `Déjà View`.
-- App Group: `group.com.TEAMID.dejaview` (replace TEAMID). Both targets use it.
+- App Group: `group.com.H747JY2BA4.dejaview` (replace H747JY2BA4). Both targets use it.
 - Build settings (match the sample): iOS 27.0, Swift 6.0, `SWIFT_APPROACHABLE_CONCURRENCY = YES`, `GENERATE_INFOPLIST_FILE = YES`.
 
 **The extension does not run the model.** It saves the raw post with `status = .pending` and closes. The main app processes pending posts when it becomes active.
@@ -256,7 +256,7 @@ enum Platform: String, Codable, CaseIterable {
     static func detect(from url: URL) -> Platform   // by host: instagram.com, tiktok.com, threads.net/threads.com, x.com/twitter.com, facebook.com/fb.watch, else .web
 }
 ```
-`SharedContainer` creates one `ModelContainer` for `SavedPost` in the App Group container (`ModelConfiguration(groupContainer: .identifier("group.com.TEAMID.dejaview"), cloudKitDatabase: .none)`).
+`SharedContainer` creates one `ModelContainer` for `SavedPost` in the App Group container (`ModelConfiguration(groupContainer: .identifier("group.com.H747JY2BA4.dejaview"), cloudKitDatabase: .none)`).
 
 ## Categories (Shared/PostCategory.swift)
 ```swift

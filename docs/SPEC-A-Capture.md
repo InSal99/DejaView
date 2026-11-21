@@ -10,7 +10,7 @@
 
 ## Shared contract (identical in all three specs; change it only after telling the team)
 
-**App:** Déjà View ("You've seen it before. Now you can find it again."). Code name `DejaView` (no accent). Targets `DejaView` (app) and `DejaViewShare` (share extension), both with display name `Déjà View`. App Group `group.com.TEAMID.dejaview`. Xcode 27, iOS 27, Swift 6, Approachable Concurrency on. No third-party packages, no server, no CloudKit.
+**App:** Déjà View ("You've seen it before. Now you can find it again."). Code name `DejaView` (no accent). Targets `DejaView` (app) and `DejaViewShare` (share extension), both with display name `Déjà View`. App Group `group.com.H747JY2BA4.dejaview`. Xcode 27, iOS 27, Swift 6, Approachable Concurrency on. No third-party packages, no server, no CloudKit.
 
 **Capstone rules:** Track C. At least one `@Generable` type (B: `PostAnalysis`) and one `Tool` (C: `SearchSavedPostsTool`). Demo at 15:30, three minutes.
 
@@ -167,7 +167,7 @@ The `deja-view` folder already has `CLAUDE.md`, `README.md`, `.gitignore`, `docs
 3. Target → General → Display Name `Déjà View`; Minimum Deployments iOS 27.
 4. Signing & Capabilities → the shared team.
 5. File → New → Target → Share Extension → `DejaViewShare`, same team, iOS 27, Display Name `Déjà View`. Activate its scheme when asked.
-6. **App Groups** on both targets: `group.com.TEAMID.dejaview` (real team ID; tell B and C, and replace TEAMID in the docs).
+6. **App Groups** on both targets: `group.com.H747JY2BA4.dejaview` (real team ID; tell B and C, and replace H747JY2BA4 in the docs).
 7. Both targets: Swift 6.0, Approachable Concurrency Yes.
 8. Check the source folders are synced folders (blue icons; right-click shows "Convert to Group"). If they're grey groups, right-click → "Convert to Folder".
 9. In `DejaView/DejaView/` create folders Shared, Services, Agent, Views. Select `Shared` → File inspector → Target Membership: tick **both** `DejaView` and `DejaViewShare`.
@@ -178,7 +178,7 @@ The `deja-view` folder already has `CLAUDE.md`, `README.md`, `.gitignore`, `docs
 
 ### Shared files
 - Exactly the data model in the shared contract, including `displayName`, `color` and `symbol` on `PostCategory`, and `displayName` on `Platform`.
-- `SharedContainer.container`: `ModelContainer(for: SavedPost.self, configurations: ModelConfiguration(groupContainer: .identifier("group.com.TEAMID.dejaview"), cloudKitDatabase: .none))`. If creating it fails, crash with a clear message in DEBUG (it's a setup error).
+- `SharedContainer.container`: `ModelContainer(for: SavedPost.self, configurations: ModelConfiguration(groupContainer: .identifier("group.com.H747JY2BA4.dejaview"), cloudKitDatabase: .none))`. If creating it fails, crash with a clear message in DEBUG (it's a setup error).
 - `ImageTools.downscaledJPEG`: decode with ImageIO, longest side ≤ 1600 px, JPEG quality 0.8.
 
 ### LinkFetcher (J4)
