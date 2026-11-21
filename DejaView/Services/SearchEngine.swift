@@ -56,7 +56,7 @@ enum SearchEngine {
         return result
     }
 
-    static func search(_ query: SearchQuery, in posts: [SavedPost], now: Date = .now) -> (results: [SearchResult], relaxedNote: String?) {
+    static func search(_ query: SearchQuery, in posts: [SavedPost], now: Date = .now, limit: Int = 20) -> (results: [SearchResult], relaxedNote: String?) {
         var keywords: [String] = []
         for word in query.keywords.flatMap({ Self.keywords(fromRaw: $0) }) where !keywords.contains(word) {
             keywords.append(word)
@@ -85,7 +85,7 @@ enum SearchEngine {
             matches = matching(effectiveQuery, keywords: keywords, posts: posts, now: now)
             if !matches.isEmpty { note = "No exact match; showing keyword matches across all platforms." }
         }
-        return (Array(matches.prefix(20)), note)
+        return (Array(matches.prefix(limit)), note)
     }
 
     private static func matching(_ query: SearchQuery, keywords: [String], posts: [SavedPost], now: Date) -> [SearchResult] {

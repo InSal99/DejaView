@@ -29,8 +29,10 @@ struct LibraryView: View {
         var base = posts.filter { source.includes($0.sourceKind) && (category == nil || $0.category == category) }
         let words = SearchEngine.keywords(fromRaw: searchText)
         if !words.isEmpty {
-            let ranked = SearchEngine.search(SearchQuery(keywords: words), in: base).results.map(\.post.id)
-            base = ranked.compactMap { id in base.first { $0.id == id } }
+            // Library search keeps every match, not just the top 20 used by Ask.
+            let byID = Dictionary(uniqueKeysWithValues: base.map { ($0.id, $0) })
+            let ranked = SearchEngine.search(SearchQuery(keywords: words), in: base, limit: .max).results.map(\.post.id)
+            base = ranked.compactMap { byID[$0] }
         }
         return base
     }
