@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 420" width="1024" height="1024" fill="none">
+  <defs>
+    <clipPath id="dv-mono-lens">
+      <circle cx="196.5" cy="200" r="147" />
+    </clipPath>
+    <mask id="dv-mono-cut">
+      <rect width="420" height="420" fill="#FFFFFF" />
+      <!-- Cut eyes out cleanly so monochrome mark works transparently on any background -->
+      <ellipse cx="270" cy="194" rx="7.2" ry="12.5" transform="rotate(-6 270 194)" fill="#000000" />
+      <ellipse cx="308" cy="195" rx="5.8" ry="12" transform="rotate(-4 308 195)" fill="#000000" />
+      <ellipse cx="171" cy="222" rx="6.8" ry="12.5" transform="rotate(-6 171 222)" fill="#000000" />
+      <ellipse cx="211" cy="221" rx="5.8" ry="12" transform="rotate(-4 211 221)" fill="#000000" />
+    </mask>
+    <mask id="dv-back-sep">
+      <rect width="420" height="420" fill="#FFFFFF" />
+      <path d="M40 365 L48 238 C62 218 76 198 86 182 C96 160 107 139 118 131 C123 128 129 130 133 136 L149 162 C160 165 170 165 180 161 L200 143 C206 138 213 141 215 149 L220 189 C230 205 235 222 234 239 C232 259 218 274 202 284 C190 293 184 312 183 340 L182 365 Z" fill="#000000" stroke="#000000" stroke-width="13" stroke-linejoin="round" />
+    </mask>
+  </defs>
+
+  <!-- Handle -->
+  <path d="M312 316 L383 387" stroke="currentColor" stroke-width="40" stroke-linecap="round" />
+
+  <!-- Twin cats (transparent eyes + clean separation gap) -->
+  <g clip-path="url(#dv-mono-lens)" mask="url(#dv-mono-cut)">
+    <g mask="url(#dv-back-sep)">
+      <path d="M174 365 L174 176 C184 148 198 118 212 106 C217 102 223 103 227 109 L243 135 C254 137 265 137 274 133 L294 117 C300 112 306 115 308 122 L314 166 C324 182 330 198 329 214 C328 234 316 248 300 258 C287 267 281 284 279 310 L276 365 Z" fill="currentColor" fill-opacity="0.72" />
+    </g>
+    <path d="M40 365 L48 238 C62 218 76 198 86 182 C96 160 107 139 118 131 C123 128 129 130 133 136 L149 162 C160 165 170 165 180 161 L200 143 C206 138 213 141 215 149 L220 189 C230 205 235 222 234 239 C232 259 218 274 202 284 C190 293 184 312 183 340 L182 365 Z" fill="currentColor" />
+  </g>
+
+  <!-- Outer Ring -->
+  <circle cx="196.5" cy="200" r="172" stroke="currentColor" stroke-width="29" />
+</svg>

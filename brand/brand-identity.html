@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Déjà View brand identity, twin-cat search logo, blue color system, iOS app icon, and native design guidelines." />
+  <title>Déjà View, Brand Identity &amp; Design System</title>
+  <style>
+    /* Hallmark · theme: custom-brand (Déjà View Blue & Twin-Cat Obsidian) · genre: modern-minimal · scope: app */
+    /* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V5 · rebuilt around the user's twin-cats search logo and sampled Déjà View Blue palette with zero purple */
+
+    :root {
+      --color-paper: oklch(98.5% 0.004 250);
+      --color-paper-2: oklch(95.8% 0.012 250);
+      --color-paper-3: oklch(92.5% 0.02 250);
+      --color-ink: oklch(21% 0.008 255);
+      --color-ink-2: oklch(36% 0.01 255);
+      --color-muted: oklch(50% 0.012 255);
+      --color-rule: oklch(88% 0.015 250);
+      --color-rule-2: oklch(78% 0.025 250);
+
+      /* Sampled Déjà View Blue Brand Palette */
+      --brand-sky: #BED7F7;
+      --brand-blue: #5FA1ED;
+      --brand-cobalt: #3B7DD8;
+      --brand-ice: #E7F1FC;
+      --brand-pill: #F3F7FC;
+      --brand-obsidian: #313235;
+      --brand-charcoal: #505455;
+
+      --color-accent: #3B7DD8;
+      --color-accent-ink: #FCFDFF;
+      --color-focus: #3B7DD8;
+      --shadow-icon: 0 12px 32px oklch(55% 0.14 254 / 0.16);
+
+      /* App Category Accents (no purple brand dominance) */
+      --cat-design: #3B7DD8;
+      --cat-design-bg: rgba(59, 125, 216, 0.13);
+      --cat-food: #D97706;
+      --cat-food-bg: rgba(217, 119, 6, 0.13);
+      --cat-travel: #0E93A6;
+      --cat-travel-bg: rgba(14, 147, 166, 0.13);
+      --cat-tech: #2563EB;
+      --cat-tech-bg: rgba(37, 99, 235, 0.13);
+      --cat-tips: #B45309;
+      --cat-tips-bg: rgba(245, 158, 11, 0.16);
+      --cat-shopping: #E11D48;
+      --cat-shopping-bg: rgba(225, 29, 72, 0.12);
+      --cat-entertainment: #DC2626;
+      --cat-entertainment-bg: rgba(220, 38, 38, 0.12);
+      --cat-other: #525866;
+      --cat-other-bg: rgba(82, 88, 102, 0.14);
+
+      --color-dark-stage: oklch(15% 0.012 252);
+      --color-dark-ink: oklch(96% 0.006 250);
+      --color-dark-muted: oklch(68% 0.016 250);
+
+      --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", system-ui, sans-serif;
+      --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+      --font-mono: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --space-10: 40px;
+      --space-12: 48px;
+
+      --radius-card: 16px;
+      --radius-pill: 999px;
+      --rule-hair: 1px;
+      --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+      --dur-press: 140ms;
+    }
+
+    html[data-theme="dark"] {
+      --color-paper: oklch(14% 0.012 252);
+      --color-paper-2: oklch(18.5% 0.015 252);
+      --color-paper-3: oklch(23% 0.018 252);
+      --color-ink: oklch(95% 0.006 250);
+      --color-ink-2: oklch(80% 0.014 250);
+      --color-muted: oklch(64% 0.016 250);
+      --color-rule: oklch(28% 0.016 252);
+      --color-rule-2: oklch(37% 0.02 252);
+      --color-accent: #7EB8F7;
+      --color-accent-ink: oklch(14% 0.02 252);
+      --color-focus: #7EB8F7;
+      --brand-pill: oklch(22% 0.024 252);
+      --cat-design: #7CB4F5;
+      --cat-tech: #60A5FA;
+      --cat-tips: #FBBF24;
+      --cat-other: #9CA3AF;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%;
+      overflow-x: clip;
+      background-color: var(--color-paper);
+      color: var(--color-ink);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.55;
+      scrollbar-color: var(--color-rule-2) var(--color-paper);
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 200ms var(--ease-out), color 200ms var(--ease-out);
+    }
+
+    ::selection {
+      background-color: var(--color-accent);
+      color: var(--color-accent-ink);
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--color-focus);
+      outline-offset: 2px;
+      transition: none;
+    }
+
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.88em;
+      background-color: var(--color-paper-3);
+      padding: var(--space-1) var(--space-2);
+      border-radius: var(--space-1);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 var(--space-6);
+    }
+
+    /* Top Bar */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background-color: var(--color-paper);
+      border-bottom: var(--rule-hair) solid var(--color-rule);
+    }
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      min-height: 64px;
+    }
+    .brand-mini {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--color-ink);
+      text-decoration: none;
+    }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .btn-pill {
+      min-height: 36px;
+      padding: 0 var(--space-4);
+      border-radius: var(--radius-pill);
+      border: var(--rule-hair) solid var(--color-rule-2);
+      background-color: transparent;
+      color: var(--color-ink);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      transition: background-color var(--dur-press) var(--ease-out), transform var(--dur-press) var(--ease-out);
+    }
+    .btn-pill:active { transform: scale(0.97); }
+    .btn-pill--primary {
+      background-color: var(--color-accent);
+      border-color: var(--color-accent);
+      color: var(--color-accent-ink);
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .btn-pill:hover:not(.btn-pill--primary) { background-color: var(--color-paper-2); }
+    }
+
+    /* Typography */
+    h1, h2, h3 {
+      font-family: var(--font-display);
+      color: var(--color-ink);
+      text-wrap: balance;
+      overflow-wrap: break-word;
+      min-width: 0;
+    }
+    h1 {
+      font-size: clamp(40px, 5vw, 56px);
+      font-weight: 750;
+      line-height: 1.04;
+      letter-spacing: -0.03em;
+    }
+    h2 {
+      font-size: clamp(28px, 3.2vw, 38px);
+      font-weight: 700;
+      line-height: 1.12;
+      letter-spacing: -0.025em;
+    }
+    h3 {
+      font-size: 17px;
+      font-weight: 650;
+      line-height: 1.3;
+    }
+    .lede {
+      font-size: 18px;
+      line-height: 1.5;
+      color: var(--color-ink-2);
+      max-width: 60ch;
+    }
+
+    /* Sections */
+    .section {
+      padding: var(--space-12) 0;
+      border-bottom: var(--rule-hair) solid var(--color-rule);
+    }
+    .section:last-of-type { border-bottom: none; }
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--space-4);
+      margin-bottom: var(--space-8);
+    }
+    .section-note {
+      font-size: 14px;
+      color: var(--color-muted);
+    }
+
+    /* Grids */
+    .grid-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      gap: var(--space-10);
+      align-items: center;
+    }
+    .grid-logo {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.35fr);
+      gap: var(--space-6);
+    }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-4); }
+
+    /* Brand Pillar Pills (Search, Find, Recall, Assist) */
+    .pillar-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+    .pillar-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-pill);
+      background-color: var(--brand-pill);
+      border: var(--rule-hair) solid var(--color-rule);
+      color: var(--color-ink);
+      font-size: 13.5px;
+      font-weight: 600;
+    }
+    .pillar-icon {
+      color: var(--color-accent);
+      display: inline-flex;
+    }
+
+    /* Surfaces */
+    .surface-well {
+      background-color: var(--color-paper-2);
+      color: var(--color-ink);
+      border-radius: var(--radius-card);
+      padding: var(--space-6);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+    .surface-dark {
+      background-color: var(--color-dark-stage);
+      color: var(--color-dark-ink);
+      border-radius: var(--radius-card);
+      padding: var(--space-6);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+    .surface-dark h3 { color: var(--color-dark-ink); }
+    .surface-dark .muted-dark { color: var(--color-dark-muted); }
+
+    .logo-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-4);
+      padding: var(--space-8);
+      background-color: var(--color-paper-2);
+      border-radius: var(--radius-card);
+      border: var(--rule-hair) solid var(--color-rule);
+    }
+    .icon-shadow {
+      border-radius: 26px;
+      box-shadow: var(--shadow-icon);
+    }
+
+    .mono-lockup {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      padding: var(--space-3) 0;
+    }
+    .mono-divider {
+      width: 1px;
+      height: 44px;
+      background-color: var(--color-rule-2);
+    }
+    .mono-wordmark {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
+
+    .scale-strip {
+      display: flex;
+      align-items: flex-end;
+      gap: var(--space-6);
+      flex-wrap: wrap;
+      padding: var(--space-6);
+      border-top: var(--rule-hair) solid var(--color-rule);
+      border-bottom: var(--rule-hair) solid var(--color-rule);
+    }
+    .scale-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: 12.5px;
+      color: var(--color-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Color Swatches */
+    .swatch {
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      border: var(--rule-hair) solid var(--color-rule);
+      background-color: var(--color-paper);
+      color: var(--color-ink);
+    }
+    .swatch-fill { height: 76px; }
+    .swatch-fill--sky { background-color: var(--brand-sky); }
+    .swatch-fill--blue { background-color: var(--brand-blue); }
+    .swatch-fill--cobalt { background-color: var(--brand-cobalt); }
+    .swatch-fill--ice { background-color: var(--brand-ice); }
+    .swatch-fill--obsidian { background-color: var(--brand-obsidian); }
+    .swatch-fill--charcoal { background-color: var(--brand-charcoal); }
+    .swatch-meta {
+      padding: var(--space-3) var(--space-4);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+    .swatch-name { font-size: 14px; font-weight: 650; }
+    .swatch-code { font-size: 12px; color: var(--color-muted); font-family: var(--font-mono); }
+
+    /* Category Chips */
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--space-4);
+    }
+    .cat-card {
+      padding: var(--space-4);
+      border-radius: var(--radius-card);
+      background-color: var(--color-paper-2);
+      color: var(--color-ink);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    .cat-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-1) var(--space-3);
+      border-radius: var(--radius-pill);
+      font-size: 12.5px;
+      font-weight: 600;
+      width: fit-content;
+    }
+    .cat-chip--design { background-color: var(--cat-design-bg); color: var(--cat-design); }
+    .cat-chip--food { background-color: var(--cat-food-bg); color: var(--cat-food); }
+    .cat-chip--travel { background-color: var(--cat-travel-bg); color: var(--cat-travel); }
+    .cat-chip--tech { background-color: var(--cat-tech-bg); color: var(--cat-tech); }
+    .cat-chip--tips { background-color: var(--cat-tips-bg); color: var(--cat-tips); }
+    .cat-chip--shopping { background-color: var(--cat-shopping-bg); color: var(--cat-shopping); }
+    .cat-chip--entertainment { background-color: var(--cat-entertainment-bg); color: var(--cat-entertainment); }
+    .cat-chip--other { background-color: var(--cat-other-bg); color: var(--cat-other); }
+    .cat-symbol { font-size: 12px; font-family: var(--font-mono); color: var(--color-muted); }
+
+    /* Ledger Table */
+    .rules-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .rules-table th {
+      text-align: left;
+      padding: var(--space-3) var(--space-4);
+      color: var(--color-muted);
+      font-weight: 600;
+      border-bottom: var(--rule-hair) solid var(--color-rule-2);
+    }
+    .rules-table td {
+      padding: var(--space-3) var(--space-4);
+      border-bottom: var(--rule-hair) solid var(--color-rule);
+      color: var(--color-ink-2);
+      vertical-align: top;
+    }
+    .rules-table tr:last-child td { border-bottom: none; }
+    .rules-table td strong { color: var(--color-ink); }
+
+    @media (max-width: 900px) {
+      .grid-hero, .grid-logo, .grid-3, .grid-4, .cat-grid { grid-template-columns: minmax(0, 1fr); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand-mini" href="#">
+        <img src="./deja-view-app-icon.svg" alt="Déjà View icon" width="32" height="32" />
+        <span>Déjà View Brand Identity</span>
+      </a>
+      <div class="nav-actions">
+        <a class="btn-pill" href="../pitch-deck.html">Open Pitch Deck</a>
+        <button class="btn-pill" onclick="toggleTheme()">Toggle Light/Dark</button>
+        <button class="btn-pill btn-pill--primary" onclick="window.print()">Export PDF</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Hero -->
+    <section class="section">
+      <div class="grid-hero">
+        <div style="display:flex; flex-direction:column; gap:var(--space-4);">
+          <h1>Déjà View</h1>
+          <p class="lede" style="font-size:22px; font-weight:500; color:var(--color-ink);">
+            You’ve seen it before. Now you can find it again.
+          </p>
+          <p class="lede">
+            Twin black cats embody a déjà vu feeling, while a blue search motif expresses fast retrieval and discovery of your saved content with on-device Apple Intelligence.
+          </p>
+
+          <div class="pillar-row">
+            <span class="pillar-chip"><span class="pillar-icon">⌕</span>Search</span>
+            <span class="pillar-chip"><span class="pillar-icon">▭</span>Find</span>
+            <span class="pillar-chip"><span class="pillar-icon">↺</span>Recall</span>
+            <span class="pillar-chip"><span class="pillar-icon">✦</span>Assist</span>
+          </div>
+
+          <div style="display:flex; flex-wrap:wrap; gap:var(--space-2); margin-top:var(--space-2);">
+            <a class="btn-pill btn-pill--primary" href="./deja-view-logo.svg" download>Primary Logo SVG</a>
+            <a class="btn-pill" href="./deja-view-app-icon.svg" download>App Icon SVG</a>
+            <a class="btn-pill" href="./deja-view-logo-mono.svg" download>Monochrome SVG</a>
+            <a class="btn-pill" href="./deja-view-lockup.svg" download>Lockup SVG</a>
+            <a class="btn-pill" href="./deja-view-icon-bleed-1024.png" download>1024px Xcode PNG</a>
+          </div>
+        </div>
+
+        <div class="logo-stage">
+          <img src="./deja-view-logo.svg" alt="Déjà View twin black cats inside blue magnifying glass" width="236" height="236" />
+          <span style="font-size:13px; color:var(--color-muted);">Primary Vector Mark (Twin Black Cats + Blue Search Lens)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Logo System & Anatomy -->
+    <section class="section">
+      <div class="section-head">
+        <h2>Logo &amp; iOS App Icon System</h2>
+        <span class="section-note">Friendly, unmistakable silhouette on light and dark surfaces</span>
+      </div>
+
+      <div class="grid-logo">
+        <div class="surface-well">
+          <img src="./deja-view-app-icon.svg" alt="Déjà View iOS App Icon" width="116" height="116" class="icon-shadow" />
+          <h3>App Icon (iOS)</h3>
+          <p style="font-size:14px; color:var(--color-ink-2);">
+            Soft ice-blue wash (<code>#FCFDFF</code> to <code>#E7F1FC</code>) keeps the blue lens and twin black cats legible on any wallpaper.
+          </p>
+        </div>
+
+        <div class="surface-dark">
+          <img src="./deja-view-logo-mono-dark.png" alt="Monochrome mark on dark surface" width="112" height="112" />
+          <h3>Monochrome (Dark)</h3>
+          <p class="muted-dark" style="font-size:14px;">
+            High-contrast single-ink variation for dark slides, tinted Home Screen icons, and watermarks.
+          </p>
+        </div>
+
+        <div class="surface-well">
+          <div class="mono-lockup">
+            <img src="./deja-view-logo-mono.png" alt="Monochrome mark" width="68" height="68" />
+            <span class="mono-divider"></span>
+            <span class="mono-wordmark">Déjà View</span>
+          </div>
+          <h3>Monochrome Lockup</h3>
+          <p style="font-size:14px; color:var(--color-ink-2);">
+            Pairs the monochrome twin-cat search mark with a thin vertical hairline and the SF Pro Display wordmark.
+          </p>
+        </div>
+      </div>
+
+      <div style="margin-top:var(--space-6);">
+        <h3 style="margin-bottom:var(--space-3);">Small-Size Legibility Check</h3>
+        <div class="scale-strip">
+          <div class="scale-item"><img src="./deja-view-app-icon.svg" alt="120px icon" width="120" height="120" /><span>120px (Spotlight)</span></div>
+          <div class="scale-item"><img src="./deja-view-app-icon.svg" alt="60px icon" width="60" height="60" /><span>60px (Home Screen)</span></div>
+          <div class="scale-item"><img src="./deja-view-app-icon.svg" alt="40px icon" width="40" height="40" /><span>40px (Notification)</span></div>
+          <div class="scale-item"><img src="./deja-view-app-icon.svg" alt="29px icon" width="29" height="29" /><span>29px (Settings)</span></div>
+          <div class="scale-item"><img src="./deja-view-app-icon.svg" alt="16px icon" width="16" height="16" /><span>16px (Favicon)</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Blue Brand Color System -->
+    <section class="section">
+      <div class="section-head">
+        <h2>Blue Brand Palette (Zero Purple)</h2>
+        <span class="section-note">Sampled directly from the logo lens, ice tint, and twin-cat ink</span>
+      </div>
+
+      <div class="grid-3" style="margin-bottom:var(--space-8);">
+        <div class="swatch">
+          <div class="swatch-fill swatch-fill--sky"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">Sky Lens Highlight</span>
+            <span class="swatch-code">#BED7F7 · top of search ring</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-fill swatch-fill--blue"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">Déjà View Blue (Primary)</span>
+            <span class="swatch-code">#5FA1ED · brand accent &amp; lens</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-fill swatch-fill--cobalt"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">Retrieval Cobalt</span>
+            <span class="swatch-code">#3B7DD8 · buttons, focus &amp; links</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-fill swatch-fill--ice"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">Ice Surface Wash</span>
+            <span class="swatch-code">#E7F1FC / #F3F7FC · icon &amp; pills</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-fill swatch-fill--obsidian"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">Twin-Cat Obsidian</span>
+            <span class="swatch-code">#313235 · primary ink &amp; front cat</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-fill swatch-fill--charcoal"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">Shadow Charcoal</span>
+            <span class="swatch-code">#505455 · back cat &amp; secondary text</span>
+          </div>
+        </div>
+      </div>
+
+      <h3 style="margin-bottom:var(--space-4);">8 App Category Chips (15% tint fill + SF Symbol)</h3>
+      <div class="cat-grid">
+        <div class="cat-card">
+          <span class="cat-chip cat-chip--design">Design</span>
+          <span class="cat-symbol">paintbrush.pointed · #3B7DD8</span>
+        </div>
+        <div class="cat-card">
+          <span class="cat-chip cat-chip--food">Food &amp; Recipes</span>
+          <span class="cat-symbol">fork.knife · systemOrange</span>
+        </div>
+        <div class="cat-card">
+          <span class="cat-chip cat-chip--travel">Travel</span>
+          <span class="cat-symbol">airplane · systemTeal</span>
+        </div>
+        <div class="cat-card">
+          <span class="cat-chip cat-chip--tech">Tech</span>
+          <span class="cat-symbol">laptopcomputer · systemBlue</span>
+        </div>
+        <div class="cat-card">
+          <span class="cat-chip cat-chip--tips">Tips &amp; Learning</span>
+          <span class="cat-symbol">lightbulb · systemYellow</span>
+        </div>
+        <div class="cat-card">
+          <span class="cat-chip cat-chip--shopping">Shopping</span>
+          <span class="cat-symbol">bag · systemPink</span>
+        </div>
+        <div class="cat-card">
+          <span class="cat-chip cat-chip--entertainment">Entertainment</span>
+          <span class="cat-symbol">play.rectangle · systemRed</span>
+        </div>
+        <div class="cat-card">
+          <span class="cat-chip cat-chip--other">Other</span>
+          <span class="cat-symbol">square.grid.2x2 · systemGray</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Design Principles & Voice -->
+    <section class="section">
+      <div class="section-head">
+        <h2>Design Rules &amp; Brand Voice</h2>
+        <span class="section-note">Aligned with DESIGN.md and the blue twin-cat identity</span>
+      </div>
+
+      <table class="rules-table">
+        <thead>
+          <tr>
+            <th style="width:24%;">Dimension</th>
+            <th style="width:48%;">Standard</th>
+            <th style="width:28%;">Never Do</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Brand Colour</strong></td>
+            <td>Use <strong>Déjà View Blue</strong> (<code>#5FA1ED</code> / <code>#3B7DD8</code>) with ice-blue surfaces and obsidian ink.</td>
+            <td>Never use purple gradients or purple brand accents.</td>
+          </tr>
+          <tr>
+            <td><strong>Logo &amp; Metaphor</strong></td>
+            <td>Twin black cats inside the blue magnifying glass symbolize seeing a post twice and finding it instantly.</td>
+            <td>Never stretch the lens or crop the cats out of the ring.</td>
+          </tr>
+          <tr>
+            <td><strong>UI Chrome</strong></td>
+            <td>Native iOS 26/27 Liquid Glass via <code>NavigationStack</code>, <code>TabView</code>, <code>LazyVGrid</code>, and sheets.</td>
+            <td>Never draw custom tab bars or custom fonts.</td>
+          </tr>
+          <tr>
+            <td><strong>Platform Attribution</strong></td>
+            <td>Plain <code>.caption2</code> text label (“Instagram”, “TikTok”, “Threads”, “X”, “Facebook”, “Web”).</td>
+            <td>Never use trademarked third-party platform logos.</td>
+          </tr>
+          <tr>
+            <td><strong>Copy &amp; Tone</strong></td>
+            <td>Sentence case, warm, concise, human (“Processing…”, “All caught up”).</td>
+            <td>Never expose technical jargon (“Inferencing”, “Vectorizing”).</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+    }
+  </script>
+</body>
+</html>

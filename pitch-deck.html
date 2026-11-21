@@ -1,0 +1,1982 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Déjà View saves social posts and screenshots on-device and finds them in plain language with Apple Intelligence." />
+  <title>Déjà View, Apple Academy Capstone Pitch</title>
+  <style>
+    /* Hallmark · theme: vantage (dealt 2/3, seed apple-academy-ios-app-a171·cc8ad039·2026-11-21·r0) · genre: modern-minimal · scope: app · vantage: object/steel */
+    /* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V5 · cut gradients, blobs, eyebrows, tracked caps, nested cards, and off-scale spacing so every slide holds one clear argument */
+    /* Hallmark · waive 47b · one device viewport on Slide 5 showing real SwiftUI screens · the product being pitched is an iPhone app */
+
+    :root {
+      --color-paper: oklch(13.5% 0.012 235);
+      --color-paper-2: oklch(17.5% 0.014 235);
+      --color-paper-3: oklch(21.5% 0.016 235);
+      --color-ink: oklch(95% 0.006 230);
+      --color-ink-2: oklch(81% 0.012 230);
+      --color-muted: oklch(64% 0.016 230);
+      --color-rule: oklch(27% 0.014 235);
+      --color-rule-2: oklch(36% 0.018 235);
+      --color-accent: #7EB8F7;
+      --color-accent-hi: #9CC9FA;
+      --color-accent-ink: oklch(14% 0.02 252);
+      --color-signal-red: oklch(68% 0.19 24);
+      --color-code-bg: oklch(11% 0.012 235);
+      --color-code-ink: oklch(91% 0.01 230);
+      --color-focus: #7EB8F7;
+
+      --brand-sky: #BED7F7;
+      --brand-blue: #5FA1ED;
+      --brand-cobalt: #3B7DD8;
+      --brand-ice: #E7F1FC;
+      --brand-obsidian: #313235;
+
+      --color-device-bg: oklch(11.5% 0.014 240);
+      --color-device-surface: oklch(16% 0.016 240);
+      --color-device-well: oklch(21% 0.018 240);
+      --color-device-ink: oklch(96% 0.006 230);
+      --color-device-muted: oklch(66% 0.016 235);
+      --color-device-rule: oklch(28% 0.014 240);
+      --color-device-accent: #7EB8F7;
+      --color-device-accent-ink: oklch(14% 0.02 252);
+      --color-device-warn: oklch(83% 0.16 84);
+
+      --color-syn-kw: oklch(74% 0.18 350);
+      --color-syn-ty: #7CB4F5;
+      --color-syn-st: #BED7F7;
+      --color-syn-cm: oklch(56% 0.02 235);
+      --color-syn-at: #5FA1ED;
+
+      --cat-design: #5FA1ED;
+      --cat-design-bg: rgba(95, 161, 237, 0.16);
+      --cat-food: #FF9500;
+      --cat-food-bg: rgba(255, 149, 0, 0.16);
+      --cat-travel: #30B0C7;
+      --cat-travel-bg: rgba(48, 176, 199, 0.16);
+      --cat-tech: #007AFF;
+      --cat-tech-bg: rgba(0, 122, 255, 0.16);
+      --cat-tips: #FFD60A;
+      --cat-tips-bg: rgba(255, 214, 10, 0.16);
+      --cat-shopping: #FF2D55;
+      --cat-shopping-bg: rgba(255, 45, 85, 0.16);
+      --cat-entertainment: #FF3B30;
+      --cat-entertainment-bg: rgba(255, 59, 48, 0.16);
+      --cat-other: #AEAEB2;
+      --cat-other-bg: rgba(142, 142, 147, 0.18);
+
+      --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", system-ui, sans-serif;
+      --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+      --font-mono: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --space-10: 40px;
+
+      --radius-card: 6px;
+      --radius-device: 28px;
+      --radius-pill: 999px;
+      --rule-hair: 1px;
+      --tick: 10px;
+
+      --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+      --dur-press: 140ms;
+      --dur-ui: 200ms;
+    }
+
+    html[data-theme="light"] {
+      --color-paper: oklch(96.5% 0.008 235);
+      --color-paper-2: oklch(93% 0.01 235);
+      --color-paper-3: oklch(89.5% 0.012 235);
+      --color-ink: oklch(16% 0.018 235);
+      --color-ink-2: oklch(30% 0.018 235);
+      --color-muted: oklch(46% 0.018 235);
+      --color-rule: oklch(84% 0.014 235);
+      --color-rule-2: oklch(72% 0.018 235);
+      --color-accent: #2B68C0;
+      --color-accent-hi: #2155A3;
+      --color-accent-ink: #FCFDFF;
+      --color-signal-red: oklch(52% 0.2 25);
+      --color-focus: #2B68C0;
+      --cat-design: #3B7DD8;
+      --cat-tips: #B45309;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      overflow-x: clip;
+      background-color: var(--color-paper);
+      color: var(--color-ink);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.5;
+      scrollbar-color: var(--color-rule-2) var(--color-paper);
+      -webkit-font-smoothing: antialiased;
+      transition: background-color var(--dur-ui) var(--ease-out), color var(--dur-ui) var(--ease-out);
+    }
+
+    ::selection {
+      background-color: var(--color-accent);
+      color: var(--color-accent-ink);
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--color-focus);
+      outline-offset: 2px;
+      transition: none;
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.88em;
+      color: var(--color-ink);
+      background-color: var(--color-paper-3);
+      padding: var(--space-1) var(--space-2);
+      border-radius: var(--space-1);
+    }
+
+    /* Top progress hairline */
+    .progress-track {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: var(--color-rule);
+      z-index: 30;
+    }
+    .progress-fill {
+      height: 100%;
+      background-color: var(--color-accent);
+      transform-origin: left center;
+      transition: transform var(--dur-ui) var(--ease-out);
+    }
+
+    /* Stage */
+    .deck-viewport {
+      width: 100%;
+      height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-6) var(--space-8) 76px;
+    }
+
+    .slides-stage {
+      position: relative;
+      width: 100%;
+      max-width: 1320px;
+      height: 100%;
+      max-height: 750px;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: var(--space-8) var(--space-10) var(--space-6);
+      background-color: var(--color-paper);
+      border: var(--rule-hair) solid var(--color-rule);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border: var(--rule-hair) solid var(--color-rule-2);
+      border-radius: var(--radius-card);
+      -webkit-mask: conic-gradient(at var(--tick) var(--tick), transparent 75%, var(--color-ink) 0) 0 0 / calc(100% - var(--tick)) calc(100% - var(--tick));
+      mask: conic-gradient(at var(--tick) var(--tick), transparent 75%, var(--color-ink) 0) 0 0 / calc(100% - var(--tick)) calc(100% - var(--tick));
+    }
+
+    .slide.active {
+      display: flex;
+      animation: slideSettle 160ms var(--ease-out);
+    }
+
+    @keyframes slideSettle {
+      from { opacity: 0.72; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Header & Footer */
+    .slide-top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding-bottom: var(--space-3);
+      border-bottom: var(--rule-hair) solid var(--color-rule);
+    }
+
+    .slide-section,
+    .slide-meta {
+      font-size: 13px;
+      color: var(--color-muted);
+      font-variant-numeric: tabular-nums;
+    }
+    .slide-section { font-weight: 500; }
+
+    .slide-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: var(--space-6);
+      min-height: 0;
+      padding: var(--space-2) 0;
+    }
+
+    .slide-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: var(--space-3);
+      border-top: var(--rule-hair) solid var(--color-rule);
+      font-size: 12.5px;
+      color: var(--color-muted);
+    }
+
+    /* Typography */
+    h1, h2, h3 {
+      font-family: var(--font-display);
+      color: var(--color-ink);
+      overflow-wrap: break-word;
+      min-width: 0;
+      text-wrap: balance;
+    }
+
+    h1 {
+      font-size: clamp(44px, 5.2vw, 66px);
+      font-weight: 700;
+      line-height: 1.02;
+      letter-spacing: -0.032em;
+    }
+
+    h2 {
+      font-size: clamp(28px, 3vw, 40px);
+      font-weight: 650;
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+    }
+
+    h3 {
+      font-size: 17px;
+      font-weight: 650;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+    }
+
+    .lede {
+      font-size: clamp(16px, 1.45vw, 19px);
+      line-height: 1.45;
+      color: var(--color-ink-2);
+      max-width: 64ch;
+    }
+    .lede--lead {
+      font-size: 23px;
+      font-weight: 500;
+      color: var(--color-ink);
+    }
+
+    .signal-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-1) var(--space-3);
+      border-radius: var(--radius-pill);
+      background-color: var(--color-accent);
+      color: var(--color-accent-ink);
+      font-size: 12.5px;
+      font-weight: 650;
+      width: fit-content;
+    }
+
+    .outline-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: var(--space-1) var(--space-3);
+      border-radius: var(--radius-pill);
+      border: var(--rule-hair) solid var(--color-rule-2);
+      color: var(--color-ink-2);
+      font-size: 12.5px;
+      font-weight: 500;
+      width: fit-content;
+    }
+
+    /* Grids */
+    .split-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      gap: var(--space-10);
+      align-items: center;
+    }
+    .split-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-6);
+      align-items: stretch;
+    }
+    .split-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-4);
+      align-items: stretch;
+    }
+    .split-4 {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--space-4);
+      align-items: stretch;
+    }
+    .split-asym {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: var(--space-8);
+      align-items: start;
+    }
+
+    /* Varied Surface Roles (F7) */
+    .surface-well {
+      background-color: var(--color-paper-2);
+      border-radius: var(--radius-card);
+      padding: var(--space-5);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+    .surface-well--compact {
+      padding: var(--space-4);
+      gap: var(--space-2);
+    }
+
+    .surface-ticks {
+      position: relative;
+      background-color: var(--color-paper-2);
+      border: var(--rule-hair) solid var(--color-rule);
+      border-radius: var(--radius-card);
+      padding: var(--space-5) var(--space-6);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+    .surface-ticks::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border: var(--rule-hair) solid var(--color-rule-2);
+      border-radius: var(--radius-card);
+      -webkit-mask: conic-gradient(at 8px 8px, transparent 75%, var(--color-ink) 0) 0 0 / calc(100% - 8px) calc(100% - 8px);
+      mask: conic-gradient(at 8px 8px, transparent 75%, var(--color-ink) 0) 0 0 / calc(100% - 8px) calc(100% - 8px);
+    }
+
+    .surface-ruled {
+      border-top: var(--rule-hair) solid var(--color-rule-2);
+      border-bottom: var(--rule-hair) solid var(--color-rule-2);
+      padding: var(--space-5) 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .surface-band {
+      border-top: var(--rule-hair) solid var(--color-rule);
+      padding-top: var(--space-4);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+    }
+
+    .ledger-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+    }
+    .ledger-list li {
+      padding: var(--space-3) 0;
+      border-bottom: var(--rule-hair) solid var(--color-rule);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+    .ledger-list li:first-child { padding-top: 0; }
+    .ledger-list li:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .ledger-title {
+      font-size: 15px;
+      font-weight: 650;
+      color: var(--color-ink);
+    }
+    .ledger-desc {
+      font-size: 13.5px;
+      color: var(--color-ink-2);
+      line-height: 1.45;
+    }
+
+    /* Slide 1 Recall Contrast */
+    .contrast-row {
+      display: grid;
+      grid-template-columns: 76px minmax(0, 1fr);
+      gap: var(--space-3);
+      align-items: start;
+      padding-bottom: var(--space-3);
+      border-bottom: var(--rule-hair) solid var(--color-rule);
+    }
+    .contrast-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .contrast-tag {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--color-muted);
+      padding-top: 2px;
+    }
+    .contrast-tag--accent { color: var(--color-accent); }
+
+    /* Slide 2 Problem Feed */
+    .problem-feed {
+      display: flex;
+      flex-direction: column;
+      border-top: var(--rule-hair) solid var(--color-rule);
+    }
+    .feed-row {
+      display: grid;
+      grid-template-columns: 104px minmax(0, 1fr) auto;
+      gap: var(--space-3);
+      align-items: baseline;
+      padding: var(--space-3) 0;
+      border-bottom: var(--rule-hair) solid var(--color-rule);
+    }
+    .feed-source {
+      font-size: 13px;
+      font-weight: 650;
+      color: var(--color-ink);
+    }
+    .feed-text {
+      font-size: 13.5px;
+      color: var(--color-ink-2);
+      line-height: 1.4;
+    }
+    .feed-gap {
+      font-size: 12px;
+      color: var(--color-signal-red);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    /* Slide 3 Bridge Laws */
+    .law-row {
+      display: grid;
+      grid-template-columns: 72px minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: var(--space-5);
+      align-items: start;
+      padding: var(--space-4) 0;
+      border-bottom: var(--rule-hair) solid var(--color-rule);
+    }
+    .law-row:first-child { border-top: var(--rule-hair) solid var(--color-rule); }
+    .law-num {
+      font-size: 28px;
+      font-weight: 300;
+      font-variant-numeric: tabular-nums;
+      color: var(--color-accent);
+      line-height: 1;
+    }
+
+    /* Slide 5 Interactive Phone Preview */
+    .phone-workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 316px;
+      gap: var(--space-8);
+      align-items: center;
+    }
+    .screen-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    .screen-item {
+      display: grid;
+      grid-template-columns: 160px minmax(0, 1fr);
+      gap: var(--space-4);
+      align-items: center;
+      padding: var(--space-2) 0;
+      border-bottom: var(--rule-hair) solid var(--color-rule);
+    }
+    .screen-item:last-child { border-bottom: none; }
+    .screen-btn {
+      width: 100%;
+      text-align: left;
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-card);
+      border: var(--rule-hair) solid var(--color-rule);
+      background-color: var(--color-paper-2);
+      color: var(--color-ink);
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: border-color var(--dur-press) var(--ease-out), background-color var(--dur-press) var(--ease-out), transform var(--dur-press) var(--ease-out);
+    }
+    .screen-btn:active { transform: scale(0.98); }
+    .screen-btn.active {
+      border-color: var(--color-accent);
+      background-color: var(--color-paper-3);
+      color: var(--color-ink);
+      font-weight: 650;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .screen-btn:hover:not(.active) { border-color: var(--color-rule-2); }
+    }
+    .screen-desc {
+      font-size: 13px;
+      color: var(--color-muted);
+      line-height: 1.4;
+    }
+
+    .query-sim-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-top: var(--space-1);
+    }
+    .sim-pill {
+      padding: var(--space-1) var(--space-3);
+      border-radius: var(--radius-pill);
+      border: var(--rule-hair) solid var(--color-rule-2);
+      background-color: transparent;
+      color: var(--color-ink-2);
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background-color var(--dur-press) var(--ease-out), border-color var(--dur-press) var(--ease-out), transform var(--dur-press) var(--ease-out);
+    }
+    .sim-pill:active { transform: scale(0.97); }
+    .sim-pill.active {
+      background-color: var(--color-accent);
+      border-color: var(--color-accent);
+      color: var(--color-accent-ink);
+      font-weight: 650;
+    }
+
+    /* Device Frame (tokens from :root) */
+    .device-viewport {
+      width: 312px;
+      height: 500px;
+      border-radius: var(--radius-device);
+      border: 2px solid var(--color-rule-2);
+      background-color: var(--color-device-bg);
+      color: var(--color-device-ink);
+      padding: var(--space-4) var(--space-4) var(--space-3);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+    .mock-screen {
+      display: none;
+      flex-direction: column;
+      gap: var(--space-3);
+      flex: 1;
+      min-height: 0;
+      opacity: 1;
+    }
+    .mock-screen.active {
+      display: flex;
+      animation: screenSwap 180ms var(--ease-out);
+    }
+    @keyframes screenSwap {
+      from { opacity: 0.45; filter: blur(1.5px); transform: scale(0.985); }
+      to { opacity: 1; filter: blur(0); transform: scale(1); }
+    }
+    .ios-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-bottom: var(--space-2);
+      border-bottom: var(--rule-hair) solid var(--color-device-rule);
+    }
+    .ios-title { font-size: 19px; font-weight: 700; letter-spacing: -0.02em; }
+    .ios-status { font-size: 11px; color: var(--color-device-accent); font-weight: 600; }
+    .ios-muted { font-size: 11.5px; color: var(--color-device-muted); line-height: 1.4; }
+    .ios-warn { font-size: 11px; color: var(--color-device-warn); }
+    .ios-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: var(--space-1) var(--space-2);
+      border-radius: var(--radius-pill);
+      background-color: var(--color-device-well);
+      color: var(--color-device-ink);
+      font-size: 11px;
+      width: fit-content;
+    }
+    .ios-chip--on {
+      background-color: var(--color-device-accent);
+      color: var(--color-device-accent-ink);
+      font-weight: 650;
+    }
+    .ios-answer {
+      padding: var(--space-3);
+      border-radius: var(--space-3);
+      background-color: var(--color-device-surface);
+      border: var(--rule-hair) solid var(--color-device-accent);
+      font-size: 12px;
+      line-height: 1.42;
+      color: var(--color-device-ink);
+    }
+    .ios-row {
+      padding: var(--space-2) 0;
+      border-bottom: var(--rule-hair) solid var(--color-device-rule);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+    .ios-row:last-child { border-bottom: none; }
+    .ios-row-title { font-size: 12px; font-weight: 650; color: var(--color-device-ink); }
+    .ios-row-why { font-size: 11px; color: var(--color-device-accent); }
+    .ios-row-meta { font-size: 10.5px; color: var(--color-device-muted); }
+    .ios-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-2);
+    }
+    .ios-tile {
+      background-color: var(--color-device-surface);
+      border-radius: var(--space-2);
+      padding: var(--space-2);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    .ios-thumb {
+      height: 52px;
+      border-radius: var(--space-1);
+      background-color: var(--color-device-well);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11.5px;
+      color: var(--color-device-ink);
+    }
+    .ios-thumb--warn { border: var(--rule-hair) solid var(--color-device-warn); }
+    .ios-thumb--tall { height: 84px; }
+    .ios-cta {
+      background-color: var(--color-device-accent);
+      color: var(--color-device-accent-ink);
+      text-align: center;
+      padding: var(--space-2);
+      border-radius: var(--space-2);
+      font-size: 12px;
+      font-weight: 650;
+    }
+    .ios-well {
+      background-color: var(--color-device-surface);
+      border-radius: var(--space-2);
+      padding: var(--space-2) var(--space-3);
+      font-size: 11px;
+      color: var(--color-device-ink);
+      line-height: 1.4;
+    }
+    .ios-input-bar {
+      background-color: var(--color-device-surface);
+      border: var(--rule-hair) solid var(--color-device-rule);
+      border-radius: var(--radius-pill);
+      padding: var(--space-2) var(--space-3);
+      font-size: 11.5px;
+      color: var(--color-device-ink);
+    }
+    .ios-tabbar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      padding-top: var(--space-2);
+      border-top: var(--rule-hair) solid var(--color-device-rule);
+      font-size: 11px;
+      text-align: center;
+      color: var(--color-device-muted);
+    }
+    .ios-tab-on { color: var(--color-device-accent); font-weight: 650; }
+
+    /* Code Blocks */
+    pre.code-block {
+      background-color: var(--color-code-bg);
+      color: var(--color-code-ink);
+      border: var(--rule-hair) solid var(--color-rule);
+      border-radius: var(--radius-card);
+      padding: var(--space-3) var(--space-4);
+      font-family: var(--font-mono);
+      font-size: 11.6px;
+      line-height: 1.48;
+      overflow-x: auto;
+      white-space: pre;
+    }
+    .kw { color: var(--color-syn-kw); font-weight: 600; }
+    .ty { color: var(--color-syn-ty); }
+    .st { color: var(--color-syn-st); }
+    .cm { color: var(--color-syn-cm); font-style: italic; }
+    .at { color: var(--color-syn-at); }
+
+    /* Tables */
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+    .spec-table th {
+      text-align: left;
+      padding: var(--space-2) var(--space-3);
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--color-muted);
+      border-bottom: var(--rule-hair) solid var(--color-rule-2);
+    }
+    .spec-table td {
+      padding: var(--space-3) var(--space-3);
+      border-bottom: var(--rule-hair) solid var(--color-rule);
+      vertical-align: top;
+      line-height: 1.4;
+      color: var(--color-ink-2);
+    }
+    .spec-table tr:last-child td { border-bottom: none; }
+    .spec-table td strong { color: var(--color-ink); }
+    .pass-mark { color: var(--color-accent); font-weight: 650; white-space: nowrap; }
+
+    /* Figures on Slide 9 */
+    .figure-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border-top: var(--rule-hair) solid var(--color-rule);
+      border-bottom: var(--rule-hair) solid var(--color-rule);
+    }
+    .figure-cell {
+      padding: var(--space-5);
+      border-right: var(--rule-hair) solid var(--color-rule);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    .figure-cell:last-child { border-right: none; }
+    .figure-val {
+      font-size: 42px;
+      font-weight: 300;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+      color: var(--color-ink);
+    }
+    .figure-val--accent { color: var(--color-accent); }
+
+    /* Brand Identity Slide */
+    .brand-hero-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+    .brand-cat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--space-2);
+    }
+    .cat-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-1) var(--space-3);
+      border-radius: var(--radius-pill);
+      font-size: 12.5px;
+      font-weight: 600;
+    }
+    .cat-chip--design { background-color: var(--cat-design-bg); color: var(--cat-design); }
+    .cat-chip--food { background-color: var(--cat-food-bg); color: var(--cat-food); }
+    .cat-chip--travel { background-color: var(--cat-travel-bg); color: var(--cat-travel); }
+    .cat-chip--tech { background-color: var(--cat-tech-bg); color: var(--cat-tech); }
+    .cat-chip--tips { background-color: var(--cat-tips-bg); color: var(--cat-tips); }
+    .cat-chip--shopping { background-color: var(--cat-shopping-bg); color: var(--cat-shopping); }
+    .cat-chip--entertainment { background-color: var(--cat-entertainment-bg); color: var(--cat-entertainment); }
+    .cat-chip--other { background-color: var(--cat-other-bg); color: var(--cat-other); }
+    .brand-scale-row {
+      display: flex;
+      align-items: flex-end;
+      gap: var(--space-5);
+    }
+    .brand-scale-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: 11.5px;
+      color: var(--color-muted);
+      font-variant-numeric: tabular-nums;
+    }
+    .brand-swatches {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: var(--space-2);
+    }
+    .swatch-chip {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+      font-size: 11.5px;
+      color: var(--color-muted);
+      font-variant-numeric: tabular-nums;
+    }
+    .swatch-bar {
+      height: 28px;
+      border-radius: var(--space-1);
+      border: var(--rule-hair) solid var(--color-rule);
+    }
+    .swatch-bar--sky { background-color: var(--brand-sky); }
+    .swatch-bar--blue { background-color: var(--brand-blue); }
+    .swatch-bar--cobalt { background-color: var(--brand-cobalt); }
+    .swatch-bar--ice { background-color: var(--brand-ice); }
+    .swatch-bar--obsidian { background-color: var(--brand-obsidian); }
+    .icon-round { border-radius: 18px; }
+    .icon-round--sm { border-radius: 12px; }
+
+    /* Bottom HUD */
+    .hud {
+      position: fixed;
+      bottom: var(--space-4);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-1) var(--space-3);
+      border-radius: var(--radius-pill);
+      background-color: var(--color-paper-2);
+      border: var(--rule-hair) solid var(--color-rule-2);
+    }
+    .hud-btn {
+      min-height: 32px;
+      padding: 0 var(--space-3);
+      border: none;
+      border-radius: var(--radius-pill);
+      background-color: transparent;
+      color: var(--color-ink-2);
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background-color var(--dur-press) var(--ease-out), color var(--dur-press) var(--ease-out), transform var(--dur-press) var(--ease-out);
+    }
+    .hud-btn:active { transform: scale(0.96); }
+    @media (hover: hover) and (pointer: fine) {
+      .hud-btn:hover { background-color: var(--color-paper-3); color: var(--color-ink); }
+    }
+    .hud-btn.active {
+      background-color: var(--color-paper-3);
+      color: var(--color-ink);
+      box-shadow: inset 0 0 0 1px var(--color-accent);
+      font-weight: 650;
+    }
+    .hud-sep { width: 1px; height: var(--space-4); background-color: var(--color-rule); }
+    .hud-counter {
+      font-size: 12.5px;
+      font-variant-numeric: tabular-nums;
+      color: var(--color-muted);
+      min-width: 52px;
+      text-align: center;
+    }
+
+    /* Speaker Notes Drawer */
+    .notes-drawer {
+      position: fixed;
+      right: var(--space-6);
+      bottom: 64px;
+      width: 420px;
+      max-width: calc(100% - 48px);
+      max-height: 44dvh;
+      overflow-y: auto;
+      z-index: 25;
+      background-color: var(--color-paper-2);
+      border: var(--rule-hair) solid var(--color-rule-2);
+      border-radius: var(--radius-card);
+      padding: var(--space-4) var(--space-5);
+      transform-origin: bottom right;
+      opacity: 0;
+      transform: scale(0.96);
+      pointer-events: none;
+      transition: opacity 150ms var(--ease-out), transform 150ms var(--ease-out);
+    }
+    .notes-drawer.open {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
+      transition: opacity 190ms var(--ease-out), transform 190ms var(--ease-out);
+    }
+    .notes-head {
+      font-size: 13px;
+      font-weight: 650;
+      color: var(--color-accent);
+      margin-bottom: var(--space-2);
+    }
+    .notes-body {
+      font-size: 13.5px;
+      line-height: 1.52;
+      color: var(--color-ink-2);
+    }
+
+    /* Overview Grid Modal */
+    .grid-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      background-color: var(--color-paper);
+      padding: var(--space-8);
+      display: none;
+      flex-direction: column;
+      gap: var(--space-5);
+      overflow-y: auto;
+    }
+    .grid-modal.open { display: flex; }
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: var(--space-4);
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    .overview-tile {
+      padding: var(--space-4);
+      border-radius: var(--radius-card);
+      background-color: var(--color-paper-2);
+      border: var(--rule-hair) solid var(--color-rule);
+      color: var(--color-ink);
+      text-align: left;
+      font-family: inherit;
+      cursor: pointer;
+      transition: border-color var(--dur-press) var(--ease-out), transform var(--dur-press) var(--ease-out);
+    }
+    .overview-tile:active { transform: scale(0.98); }
+    .overview-tile.current { border-color: var(--color-accent); }
+    @media (hover: hover) and (pointer: fine) {
+      .overview-tile:hover:not(.current) { border-color: var(--color-rule-2); }
+    }
+
+    /* Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* Print / PDF Export */
+    @page { size: 13.333in 7.5in; margin: 0; }
+    @media print {
+      html, body {
+        width: auto;
+        height: auto;
+        overflow: visible;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .hud, .notes-drawer, .grid-modal, .progress-track { display: none !important; }
+      .deck-viewport { display: block; width: auto; height: auto; padding: 0; }
+      .slides-stage { max-width: none; max-height: none; width: auto; height: auto; }
+      .slide {
+        position: relative !important;
+        display: flex !important;
+        width: 13.333in;
+        height: 7.5in;
+        border-radius: 0;
+        page-break-after: always;
+        break-after: page;
+      }
+      .slide:last-child { page-break-after: auto; break-after: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+  <main class="deck-viewport">
+    <div class="slides-stage" id="slidesStage">
+
+      <!-- SLIDE 1: TITLE -->
+      <section class="slide active" data-title="Déjà View" data-sub="Title and core problem-to-solution promise" data-notes="0:00-0:20 Hook: Every week we save dozens of posts across Instagram, TikTok, Threads, X, and screenshots, and then never find them again. We built Déjà View for Track C: an iPhone app that turns scattered saves into searchable on-device memory.">
+        <header class="slide-top">
+          <span class="slide-section">Apple Developer Academy Jakarta, Capstone Track C</span>
+          <span class="slide-meta">iOS 27, Swift 6, Foundation Models</span>
+        </header>
+        <div class="slide-body">
+          <div class="split-hero">
+            <div style="display:flex; flex-direction:column; gap:var(--space-4);">
+              <div class="brand-hero-row">
+                <img src="./brand/deja-view-app-icon.svg" alt="Déjà View app icon" width="76" height="76" />
+                <span class="signal-pill">On-Device AI Recall</span>
+              </div>
+              <h1>Déjà View</h1>
+              <p class="lede lede--lead">
+                You’ve seen it before. Now you can find it again.
+              </p>
+              <p class="lede">
+                Save any social link or screenshot in one tap. Apple Intelligence reads, categorizes, and finds it when you ask in plain language, even in Airplane Mode.
+              </p>
+            </div>
+
+            <div class="surface-ruled">
+              <div class="contrast-row">
+                <span class="contrast-tag">Today</span>
+                <div>
+                  <div class="ledger-title">40+ bookmarks buried across 6 apps</div>
+                  <div class="ledger-desc">Instagram saves, TikTok links, X threads, and unnamed screenshots</div>
+                </div>
+              </div>
+              <div class="contrast-row">
+                <span class="contrast-tag contrast-tag--accent">Déjà View</span>
+                <div>
+                  <div class="ledger-title">Asked “resep” in Airplane Mode</div>
+                  <div class="ledger-desc">Matched Indonesian recipe post, explained why, zero server calls</div>
+                </div>
+              </div>
+              <div class="contrast-row">
+                <span class="contrast-tag">Targets</span>
+                <div style="display:flex; flex-wrap:wrap; gap:var(--space-2);">
+                  <span class="outline-pill">Best Tool Design</span>
+                  <span class="outline-pill">Most Creative Feature</span>
+                  <span class="outline-pill">Best Production Readiness</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <footer class="slide-footer">
+          <span>Déjà View, Capstone Pitch</span>
+          <span>Keys: Arrow keys navigate, N notes, G grid, T theme</span>
+        </footer>
+      </section>
+
+      <!-- SLIDE 2: THE PROBLEM -->
+      <section class="slide" data-title="The Problem" data-sub="Why saved posts vanish across silos" data-notes="Put judges inside a real Tuesday scroll: you save a design post on Instagram, a screenshot of UI copy, and a recipe on TikTok. Weeks later you remember seeing it, never which app holds it. Four structural reasons break every existing bookmark folder.">
+        <header class="slide-top">
+          <span class="slide-section">01 / The Problem</span>
+          <span class="slide-meta">Why bookmarks fail real behavior</span>
+        </header>
+        <div class="slide-body">
+          <div>
+            <h2>We save everything. We find nothing.</h2>
+            <p class="lede" style="margin-top:var(--space-2);">
+              Last Tuesday you saved three posts while scrolling. Today you only remember one clue: <em>“that design reel”</em> or <em>“resep”</em>.
+            </p>
+          </div>
+
+          <div class="split-asym">
+            <div class="problem-feed">
+              <div class="feed-row">
+                <span class="feed-source">Instagram</span>
+                <span class="feed-text">“Diera sekarang, kamu gagal jadi designer kalau hasilnya kalah sama AI”</span>
+                <span class="feed-gap">Trapped in IG</span>
+              </div>
+              <div class="feed-row">
+                <span class="feed-source">TikTok</span>
+                <span class="feed-text">“Resep ayam geprek sambal bawang, cuma 15 menit! #resep”</span>
+                <span class="feed-gap">Trapped in TT</span>
+              </div>
+              <div class="feed-row">
+                <span class="feed-source">X / Threads</span>
+                <span class="feed-text">“Tips hemat tiket pesawat ke Bali: beli hari Selasa #traveltips”</span>
+                <span class="feed-gap">Buried in feed</span>
+              </div>
+              <div class="feed-row">
+                <span class="feed-source">Screenshot</span>
+                <span class="feed-text">IMG_4821.PNG (text locked inside pixels)</span>
+                <span class="feed-gap">Unsearchable</span>
+              </div>
+            </div>
+
+            <ul class="ledger-list">
+              <li>
+                <span class="ledger-title">1. Scattered across 6+ silos</span>
+                <span class="ledger-desc">Instagram, TikTok, Threads, X, Facebook, Safari, and Camera Roll never share one index.</span>
+              </li>
+              <li>
+                <span class="ledger-title">2. Organizing while scrolling kills the habit</span>
+                <span class="ledger-desc">Any save flow that asks for folders or manual tags gets abandoned mid-scroll.</span>
+              </li>
+              <li>
+                <span class="ledger-title">3. Bilingual and private by nature</span>
+                <span class="ledger-desc">Indonesian captions mix with English UI, and personal saves reveal tastes that should stay on the phone.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <footer class="slide-footer">
+          <span>Déjà View, Problem Statement</span>
+          <span>02 / 11</span>
+        </footer>
+      </section>
+
+      <!-- SLIDE 3: THE INSIGHT (PROBLEM -> SOLUTION BRIDGE) -->
+      <section class="slide" data-title="The Insight" data-sub="Three product laws bridging problem to solution" data-notes="This is the bridge from problem to solution. Instead of building another bookmark manager that asks users to file folders, we align with how humans save and recall: zero effort at capture, automatic on-device understanding later, and partial-clue search at recall.">
+        <header class="slide-top">
+          <span class="slide-section">02 / The Bridge</span>
+          <span class="slide-meta">Design principles from the problem</span>
+        </header>
+        <div class="slide-body">
+          <div>
+            <h2>Don’t ask users to organize. Let the phone remember.</h2>
+            <p class="lede" style="margin-top:var(--space-2);">
+              Three product laws bridge the gap between mindless scrolling and direct recall.
+            </p>
+          </div>
+
+          <div>
+            <div class="law-row">
+              <span class="law-num">01</span>
+              <div>
+                <h3>Capture costs 1 second</h3>
+                <p style="font-size:13.5px; color:var(--color-muted); margin-top:var(--space-1);">Problem: folders interrupt scrolling.</p>
+              </div>
+              <p class="ledger-desc" style="font-size:14.5px;">
+                Share sheet writes a <code>.pending</code> record and closes in under 2 seconds with zero pop-ups. No folders, no questions.
+              </p>
+            </div>
+
+            <div class="law-row">
+              <span class="law-num">02</span>
+              <div>
+                <h3>Understanding runs silently</h3>
+                <p style="font-size:13.5px; color:var(--color-muted); margin-top:var(--space-1);">Problem: screenshots and links lack context.</p>
+              </div>
+              <p class="ledger-desc" style="font-size:14.5px;">
+                When the app is active, Vision OCR, language detection, and Foundation Models extract a one-sentence summary, category, and 3 tags on-device.
+              </p>
+            </div>
+
+            <div class="law-row">
+              <span class="law-num">03</span>
+              <div>
+                <h3>Recall matches partial clues</h3>
+                <p style="font-size:13.5px; color:var(--color-muted); margin-top:var(--space-1);">Problem: people remember fragments, not URLs.</p>
+              </div>
+              <p class="ledger-desc" style="font-size:14.5px;">
+                Ask with any clue (“design posts this week” or “resep”). A read-only tool filters, relaxes when needed, and cites why each post matched.
+              </p>
+            </div>
+          </div>
+        </div>
+        <footer class="slide-footer">
+          <span>Déjà View, Problem-to-Solution Bridge</span>
+          <span>03 / 11</span>
+        </footer>
+      </section>
+
+      <!-- SLIDE 4: THE SOLUTION (LIVE TRACE) -->
+      <section class="slide" data-title="The Solution" data-sub="One real post transformed across Capture, Understand, Find" data-notes="Show the exact end-to-end transformation of a real Indonesian Instagram post from SPEC.md so judges see how Capture (A), Understand (B), and Find (C) work together without friction.">
+        <header class="slide-top">
+          <span class="slide-section">03 / The Solution</span>
+          <span class="slide-meta">Capture, Understand, Find</span>
+        </header>
+        <div class="slide-body">
+          <div>
+            <h2>From raw link to trusted answer in three steps.</h2>
+            <p class="lede" style="margin-top:var(--space-2);">
+              Follow one Indonesian Instagram post through the pipeline.
+            </p>
+          </div>
+
+          <div class="split-3">
+            <div class="surface-well">
+              <span class="outline-pill">1. Capture (Person A)</span>
+              <h3>Save from any app</h3>
+              <p class="ledger-desc">
+                Share via <code>DejaViewShare</code> or paste in <code>AddLinkView</code>. Saved as <code>.pending</code> with a 1s checkmark; images downscaled to 1600px JPEG.
+              </p>
+              <div style="margin-top:auto; font-size:12.5px; color:var(--color-muted);">
+                Input: <code>instagram.com/p/…</code>
+              </div>
+            </div>
+
+            <div class="surface-ticks">
+              <span class="outline-pill">2. Understand (Person B)</span>
+              <h3>Extract and classify</h3>
+              <p class="ledger-desc">
+                <code>LinkFetcher</code> grabs OG caption + thumbnail; <code>OCRService</code> reads image text; <code>PostAnalyzer</code> produces <code>PostAnalysis</code>.
+              </p>
+              <div style="margin-top:auto; font-size:12.5px; color:var(--color-ink);">
+                Output: English summary, <code>Design</code>, <code>#ai</code> <code>#design</code> <code>#career</code>
+              </div>
+            </div>
+
+            <div class="surface-well">
+              <span class="signal-pill">3. Find (Person C)</span>
+              <h3>Ask in plain language</h3>
+              <p class="ledger-desc">
+                Ask <em>“Design posts from this week”</em>. <code>AskService</code> calls <code>searchSavedPosts</code>, streams a one-sentence reply, and shows why it matched.
+              </p>
+              <div style="margin-top:auto; font-size:12.5px; color:var(--color-accent);">
+                Works in Airplane Mode
+              </div>
+            </div>
+          </div>
+
+          <div class="surface-band">
+            <div style="font-size:13.5px; color:var(--color-ink-2);">
+              <strong style="color:var(--color-ink);">8 Fixed Categories:</strong>
+              Design, Food &amp; Recipes, Travel, Tech, Tips &amp; Learning, Shopping, Entertainment, Other
+            </div>
+            <span class="outline-pill">Unsure posts route to Needs review</span>
+          </div>
+        </div>
+        <footer class="slide-footer">
+          <span>Déjà View, End-to-End Solution</span>
+          <span>04 / 11</span>
+        </footer>
+      </section>
+
+      <!-- SLIDE 5: BRAND IDENTITY & DESIGN SYSTEM -->
+      <section class="slide" data-title="Brand Identity" data-sub="Twin black cats logo, Déjà View Blue palette, and DESIGN.md rules" data-notes="Present the brand identity: twin black cats inside a blue magnifying glass embody the déjà vu feeling of seeing a post twice and finding it again with AI assistance. We use Déjà View Blue (#5FA1ED / #3B7DD8) with ice-blue surfaces and obsidian ink—zero purple—paired with quiet native iOS 26/27 chrome.">
+        <header class="slide-top">
+          <span class="slide-section">04 / Brand Identity &amp; Visual System</span>
+          <span class="slide-meta">Twin-Cat Search Logo &amp; Déjà View Blue</span>
+        </header>
+        <div class="slide-body">
+          <h2>Twin black cats for déjà vu. A blue lens for recall.</h2>
+
+          <div class="split-2">
+            <div class="surface-ticks" style="justify-content:space-between;">
+              <div style="display:flex; align-items:center; gap:var(--space-6);">
+                <img src="./brand/deja-view-logo.svg" alt="Déjà View twin black cats inside blue magnifying glass" width="136" height="136" />
+                <div>
+                  <h3>The Brand Concept</h3>
+                  <p class="ledger-desc" style="margin-top:var(--space-1);">
+                    Twin black cats embody a déjà vu feeling, while the blue search motif expresses fast retrieval and discovery of your saved content with AI assistance.
+                  </p>
+                </div>
+              </div>
+
+              <div class="brand-scale-row">
+                <div class="brand-scale-item">
+                  <img src="./brand/deja-view-app-icon.svg" alt="iOS App Icon" width="64" height="64" />
+                  <span>iOS Icon</span>
+                </div>
+                <div class="brand-scale-item">
+                  <img src="./brand/deja-view-app-icon.svg" alt="40px icon" width="40" height="40" />
+                  <span>40px</span>
+                </div>
+                <div class="brand-scale-item">
+                  <img src="./brand/deja-view-logo-mono-dark.png" alt="Monochrome mark" width="48" height="48" />
+                  <span>Mono</span>
+                </div>
+                <div style="display:flex; flex-wrap:wrap; gap:var(--space-2); margin-left:auto;">
+                  <span class="outline-pill">Search</span>
+                  <span class="outline-pill">Find</span>
+                  <span class="outline-pill">Recall</span>
+                  <span class="outline-pill">Assist</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:var(--space-4);">
+              <div class="surface-well">
+                <h3>Déjà View Blue Palette (Zero Purple)</h3>
+                <div class="brand-swatches">
+                  <div class="swatch-chip"><span class="swatch-bar swatch-bar--sky"></span><span>#BED7F7</span></div>
+                  <div class="swatch-chip"><span class="swatch-bar swatch-bar--blue"></span><span>#5FA1ED</span></div>
+                  <div class="swatch-chip"><span class="swatch-bar swatch-bar--cobalt"></span><span>#3B7DD8</span></div>
+                  <div class="swatch-chip"><span class="swatch-bar swatch-bar--ice"></span><span>#E7F1FC</span></div>
+                  <div class="swatch-chip"><span class="swatch-bar swatch-bar--obsidian"></span><span>#313235</span></div>
+                </div>
+              </div>
+
+              <ul class="ledger-list">
+                <li>
+                  <span class="ledger-title">Native first, quiet chrome</span>
+                  <span class="ledger-desc">System Liquid Glass bars, Dynamic Type text styles, and <code>secondarySystemBackground</code> 16pt cards.</span>
+                </li>
+                <li>
+                  <span class="ledger-title">SF Symbols only, zero third-party logos</span>
+                  <span class="ledger-desc">Platforms appear as clean <code>.caption2</code> text labels; colour and motion fire only when AI acts.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <footer class="slide-footer">
+          <span>Déjà View, Brand Identity</span>
+          <span>05 / 11</span>
+        </footer>
+      </section>
+
+      <!-- SLIDE 6: INTERACTIVE PRODUCT EXPERIENCE -->
+      <section class="slide" data-title="Native iOS 27 Experience" data-sub="Interactive screens and live Ask query simulator" data-notes="Click through the 4 native screens and try the 3 Ask query presets ('Design posts from this week', 'resep', 'Travel posts from yesterday'). Notice how the Ask screen behaves honestly when nothing matches, and how Post Detail exposes 'What Déjà View read' for trust.">
+        <header class="slide-top">
+          <span class="slide-section">05 / Native Product Experience</span>
+          <span class="slide-meta">Interactive Walkthrough</span>
+        </header>
+        <div class="slide-body">
+          <div class="phone-workspace">
+            <div style="display:flex; flex-direction:column; gap:var(--space-4);">
+              <h2>Quiet native UI. AI acts only where needed.</h2>
+              <p class="lede" style="font-size:15px;">
+                Built with system SwiftUI components, Dynamic Type, VoiceOver labels, Reduce Motion support, and SF Symbols only.
+              </p>
+
+              <div class="screen-list">
+                <div class="screen-item">
+                  <button class="screen-btn active" onclick="showPhoneScreen('ask', this)">Ask Screen</button>
+                  <span class="screen-desc">Live tool chip, streamed reply, and cited match reasons.</span>
+                </div>
+                <div class="screen-item">
+                  <button class="screen-btn" onclick="showPhoneScreen('library', this)">Library Grid</button>
+                  <span class="screen-desc">2-column 4:5 cards, category filter chips, processing pulse.</span>
+                </div>
+                <div class="screen-item">
+                  <button class="screen-btn" onclick="showPhoneScreen('detail', this)">Post Detail</button>
+                  <span class="screen-desc">Summary, editable category + note, Open original, raw OCR disclosure.</span>
+                </div>
+                <div class="screen-item">
+                  <button class="screen-btn" onclick="showPhoneScreen('review', this)">Needs Review</button>
+                  <span class="screen-desc">Catches vague or offline-fallback posts with one-tap Retry with AI.</span>
+                </div>
+              </div>
+
+              <div>
+                <div style="font-size:12.5px; color:var(--color-muted); margin-bottom:var(--space-1);">Simulate Ask query on device:</div>
+                <div class="query-sim-row">
+                  <button class="sim-pill active" onclick="setAskQuery('design', this)">“Design posts this week”</button>
+                  <button class="sim-pill" onclick="setAskQuery('resep', this)">“resep”</button>
+                  <button class="sim-pill" onclick="setAskQuery('empty', this)">“Travel yesterday”</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="device-viewport" aria-label="Déjà View iPhone preview">
+              <!-- ASK SCREEN -->
+              <div class="mock-screen active" id="phone-ask">
+                <div class="ios-head">
+                  <span class="ios-title">Ask</span>
+                  <span class="ios-status" id="askStatus">Airplane Mode</span>
+                </div>
+                <div class="ios-chip" id="askChip">Searched: design, last 7 days</div>
+                <div class="ios-answer" id="askAnswer">
+                  You saved 2 design posts this week, including an Indonesian designer discussing AI and a Winter 2026 Behance concept.
+                </div>
+                <div id="askResults" style="flex:1; overflow:hidden;">
+                  <div class="ios-row">
+                    <span class="ios-row-title">Indonesian designer warns creators not to fall behind AI.</span>
+                    <span class="ios-row-why">Why: Design, ‘designer’ in caption</span>
+                    <span class="ios-row-meta">Instagram, 2d ago</span>
+                  </div>
+                  <div class="ios-row">
+                    <span class="ios-row-title">Winter 2026 conceptual design prompts on Behance.</span>
+                    <span class="ios-row-why">Why: Design, ‘design’ in tags</span>
+                    <span class="ios-row-meta">Web, 4d ago</span>
+                  </div>
+                </div>
+                <div class="ios-input-bar" id="askInput">Design posts from this week</div>
+              </div>
+
+              <!-- LIBRARY SCREEN -->
+              <div class="mock-screen" id="phone-library">
+                <div class="ios-head">
+                  <span class="ios-title">Déjà View</span>
+                  <span class="ios-status">+</span>
+                </div>
+                <div style="display:flex; gap:var(--space-2);">
+                  <span class="ios-chip ios-chip--on">All</span>
+                  <span class="ios-chip">Design</span>
+                  <span class="ios-chip">Food</span>
+                  <span class="ios-chip">Travel</span>
+                </div>
+                <div class="ios-grid">
+                  <div class="ios-tile">
+                    <div class="ios-thumb">Design</div>
+                    <div style="font-size:11px; line-height:1.3;">Designer warning on competing with AI tools.</div>
+                  </div>
+                  <div class="ios-tile">
+                    <div class="ios-thumb">Food</div>
+                    <div style="font-size:11px; line-height:1.3;">15-minute ayam geprek sambal bawang recipe.</div>
+                  </div>
+                  <div class="ios-tile">
+                    <div class="ios-thumb">Travel</div>
+                    <div style="font-size:11px; line-height:1.3;">Book Bali flights on Tuesdays to save money.</div>
+                  </div>
+                  <div class="ios-tile">
+                    <div class="ios-thumb ios-thumb--warn">Screenshot</div>
+                    <div class="ios-muted" style="font-size:11px; line-height:1.3;">“wait for it” (Needs review)</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- DETAIL SCREEN -->
+              <div class="mock-screen" id="phone-detail">
+                <div class="ios-head">
+                  <span class="ios-status">Back</span>
+                  <span class="ios-row-meta">Instagram, 2d ago</span>
+                </div>
+                <div class="ios-thumb ios-thumb--tall">Post Thumbnail (1600px JPEG)</div>
+                <div style="font-size:13.5px; font-weight:650; line-height:1.32;">
+                  Indonesian designer argues creators fail if their craft loses to AI.
+                </div>
+                <div style="display:flex; gap:var(--space-2); flex-wrap:wrap;">
+                  <span class="ios-chip">#design</span>
+                  <span class="ios-chip">#ai</span>
+                  <span class="ios-chip">#career</span>
+                </div>
+                <div class="ios-cta">Open original</div>
+                <div class="ios-well">
+                  <strong style="display:block; margin-bottom:var(--space-1);">What Déjà View read</strong>
+                  Caption (id): “Diera sekarang, kamu gagal jadi designer kalau hasilnya kalah sama AI”
+                </div>
+              </div>
+
+              <!-- REVIEW SCREEN -->
+              <div class="mock-screen" id="phone-review">
+                <div class="ios-head">
+                  <span class="ios-title">Needs review</span>
+                </div>
+                <div class="ios-muted">
+                  Déjà View wasn’t sure about these. Fix them when you have a moment.
+                </div>
+                <div class="ios-row">
+                  <span class="ios-row-title">“wait for it 😂”</span>
+                  <span class="ios-warn">Too vague to categorize, add a note</span>
+                </div>
+                <div class="ios-row">
+                  <span class="ios-row-title">instagram.com/p/EXAMPLE</span>
+                  <span class="ios-warn">No text found, add a note or retry</span>
+                </div>
+                <div class="ios-well" style="margin-top:auto;">
+                  Picking a category or saving a note automatically moves the post to <code>.processed</code>.
+                </div>
+              </div>
+
+              <div class="ios-tabbar">
+                <span id="tab-library">Library</span>
+                <span id="tab-ask" class="ios-tab-on">Ask</span>
+                <span id="tab-review">Review (1)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <footer class="slide-footer">
+          <span>Déjà View, Native iOS 27 Design</span>
+          <span>06 / 11</span>
+        </footer>
+      </section>
+
+      <!-- SLIDE 6: ARCHITECTURE -->
+      <section class="slide" data-title="On-Device Architecture" data-sub="Two targets, shared App Group SwiftData, zero external dependencies" data-notes="Explain the architectural split: DejaViewShare never loads Foundation Models so saving takes under 2 seconds. Both targets share one App Group SwiftData container with CloudKit disabled. The main app processes pending posts one at a time on scenePhase .active with prewarmed single-turn sessions.">
+        <header class="slide-top">
+          <span class="slide-section">06 / System Architecture</span>
+          <span class="slide-meta">Zero third-party packages, 100% Apple frameworks</span>
+        </header>
+        <div class="slide-body">
+          <h2>Local-first pipeline across five Apple frameworks.</h2>
+
+          <div class="split-4">
+            <div class="surface-well">
+              <h3>1. Capture</h3>
+              <ul class="ledger-list">
+                <li>
+                  <span class="ledger-title"><code>DejaViewShare</code></span>
+                  <span class="ledger-desc">Reads 1 URL, image, or text; writes <code>.pending</code> and exits in ~1s.</span>
+                </li>
+                <li>
+                  <span class="ledger-title"><code>AddLinkView</code></span>
+                  <span class="ledger-desc">Clipboard URL prefill + <code>PhotosPicker</code> for screenshots.</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="surface-well">
+              <h3>2. Shared Store</h3>
+              <ul class="ledger-list">
+                <li>
+                  <span class="ledger-title"><code>SharedContainer</code></span>
+                  <span class="ledger-desc">App Group SwiftData store with <code>cloudKitDatabase: .none</code>.</span>
+                </li>
+                <li>
+                  <span class="ledger-title"><code>LinkFetcher</code></span>
+                  <span class="ledger-desc"><code>LPMetadataProvider</code> + Open Graph HTML backup (10s timeout).</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="surface-ticks">
+              <h3>3. Understand</h3>
+              <ul class="ledger-list">
+                <li>
+                  <span class="ledger-title"><code>OCRService</code></span>
+                  <span class="ledger-desc">Vision <code>VNRecognizeTextRequest</code> using <code>en-US</code> + <code>id-ID</code>.</span>
+                </li>
+                <li>
+                  <span class="ledger-title"><code>PostAnalyzer</code></span>
+                  <span class="ledger-desc"><code>NLLanguageRecognizer</code> + guided <code>PostAnalysis</code>.</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="surface-well">
+              <h3>4. Find</h3>
+              <ul class="ledger-list">
+                <li>
+                  <span class="ledger-title"><code>SearchSavedPostsTool</code></span>
+                  <span class="ledger-desc">Read-only <code>Tool</code> calling pure-Swift <code>SearchEngine</code>.</span>
+                </li>
+                <li>
+                  <span class="ledger-title"><code>AskService</code></span>
+                  <span class="ledger-desc">Streams reply with automatic keyword fallback.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="split-3">
+            <div class="surface-well surface-well--compact">
+              <h3>Prewarmed Single-Turn Sessions</h3>
+              <p class="ledger-desc"><code>PostAnalyzer.prewarm()</code> warms at launch; every post and Ask query gets a fresh session so context never fills.</p>
+            </div>
+            <div class="surface-well surface-well--compact">
+              <h3>Dynamic Context Budget</h3>
+              <p class="ledger-desc"><code>PostProcessor.fitToContext(_:)</code> checks <code>contextSize</code> and <code>tokenCount(for:)</code> dynamically.</p>
+            </div>
+            <div class="surface-well surface-well--compact">
+              <h3>Pending Safety Net</h3>
+              <p class="ledger-desc">Every <code>.pending</code> post transitions to <code>.processed</code> or <code>.needsReview</code>, never left hanging.</p>
+            </div>
+          </div>
+        </div>
+        <footer class="slide-footer">
+          <span>Déjà View, On-Device Architecture</span>
+          <span>07 / 11</span>
+        </footer>
+      </section>
+
+      <!-- SLIDE 7: BEST TOOL DESIGN -->
+      <section class="slide" data-title="Best Tool Design" data-sub="@Generable PostAnalysis and SearchSavedPostsTool" data-notes="2:00-2:35 Under the Hood beat. Point out three deliberate engineering choices: 1) PostAnalysis generates summary before category and tags; 2) SearchSavedPostsTool uses .any enum sentinels instead of optionals and caps keywords at 5; 3) LibrarySearch returns honest sentences ('Only describe these posts.' or 'Nothing was found.') and merges raw caption words like 'resep'.">
+        <header class="slide-top">
+          <span class="slide-section">07 / Under the Hood, Best Tool Design</span>
+          <span class="slide-meta">FoundationModels @Generable &amp; Tool</span>
+        </header>
+        <div class="slide-body">
+          <h2>Built for predictable structured output and honest search.</h2>
+
+          <div class="split-2">
+            <div style="display:flex; flex-direction:column; gap:var(--space-3);">
+              <h3>1. Guided generation order (<code>PostAnalyzer.swift</code>)</h3>
+              <pre class="code-block"><span class="at">@Generable</span>
+<span class="kw">struct</span> <span class="ty">PostAnalysis</span> {
+    <span class="at">@Guide</span>(description: <span class="st">"One short English sentence..."</span>)
+    <span class="kw">var</span> summary: <span class="ty">String</span>
+    <span class="at">@Guide</span>(description: <span class="st">"The single best category..."</span>)
+    <span class="kw">var</span> category: <span class="ty">PostCategory</span>   <span class="cm">// 8-case enum</span>
+    <span class="at">@Guide</span>(description: <span class="st">"Short lowercase English tags."</span>, .count(<span class="ty">3</span>))
+    <span class="kw">var</span> tags: [<span class="ty">String</span>]
+    <span class="at">@Guide</span>(description: <span class="st">"True if the text is too vague..."</span>)
+    <span class="kw">var</span> needsReview: <span class="ty">Bool</span>
+}</pre>
+              <p class="ledger-desc">
+                Summary generates first so category, 3 tags, and <code>needsReview</code> condition on it. Enum constraints prevent invented categories.
+              </p>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:var(--space-3);">
+              <h3>2. Read-only search tool (<code>SearchSavedPostsTool.swift</code>)</h3>
+              <pre class="code-block"><span class="kw">struct</span> <span class="ty">SearchSavedPostsTool</span>: <span class="ty">Tool</span> {
+    <span class="kw">let</span> name = <span class="st">"searchSavedPosts"</span>
+    <span class="kw">let</span> description = <span class="st">"Finds posts the user saved..."</span>
+    <span class="at">@Generable</span> <span class="kw">struct</span> <span class="ty">Arguments</span> {
+        <span class="kw">var</span> category: <span class="ty">CategoryFilter</span>   <span class="cm">// .any sentinel</span>
+        <span class="kw">var</span> dateRange: <span class="ty">DateRangeOption</span> <span class="cm">// .any, .today, .last7Days</span>
+        <span class="kw">var</span> platform: <span class="ty">PlatformFilter</span>   <span class="cm">// .any sentinel</span>
+        <span class="at">@Guide</span>(..., .maximumCount(<span class="ty">5</span>))
+        <span class="kw">var</span> keywords: [<span class="ty">String</span>]
+    }
+}</pre>
+              <p class="ledger-desc">
+                <code>SearchEngine</code> scores +3 tags, +2 summary, +1 caption/OCR/note, relaxes filters stepwise, and returns <em>“Only describe these posts.”</em> or <em>“Nothing was found.”</em>
+              </p>
+            </div>
+          </div>
+        </div>
+        <footer class="slide-footer">
+          <span>Déjà View, Tool &amp; Schema Design</span>
+          <span>08 / 11</span>
+        </footer>
+      </section>
+
+      <!-- SLIDE 8: PRODUCTION READINESS -->
+      <section class="slide" data-title="Production Readiness" data-sub="Safety in layers, Xcode 27 error types, and zero-AI fallback" data-notes="Walk judges through the Production Readiness defenses: untrusted web text is isolated inside POST START / POST END delimiters, ModelErrors handles Xcode 27's LanguageModelError and SystemLanguageModel.Error types, and AskService falls back cleanly to SearchEngine keyword search if Apple Intelligence is off.">
+        <header class="slide-top">
+          <span class="slide-section">08 / Production Readiness</span>
+          <span class="slide-meta">Safety in layers &amp; graceful failure</span>
+        </header>
+        <div class="slide-body">
+          <h2>Engineered to survive untrusted text and offline states.</h2>
+
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th style="width:24%;">Production Risk</th>
+                <th style="width:54%;">Implemented Defense</th>
+                <th style="width:22%;">Verified Surface</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Prompt Injection</strong></td>
+                <td>Web captions and OCR text never enter system instructions; wrapped inside <code>POST START ... POST END</code> data markers.</td>
+                <td class="pass-mark">PostAnalyzer</td>
+              </tr>
+              <tr>
+                <td><strong>Guardrail False Refusals</strong></td>
+                <td>Initializes model with <code>guardrails: .permissiveContentTransformations</code> for summarizing third-party posts.</td>
+                <td class="pass-mark">PostAnalyzer</td>
+              </tr>
+              <tr>
+                <td><strong>Xcode 27 Error Types</strong></td>
+                <td>Classifies <code>LanguageModelError</code>, <code>SystemLanguageModel.Error</code>, <code>LanguageModelSession.Error</code>, and <code>ToolCallError</code>.</td>
+                <td class="pass-mark">ModelErrors</td>
+              </tr>
+              <tr>
+                <td><strong>Apple Intelligence Off</strong></td>
+                <td>Shows availability banner, saves 120-char fallback summary to Needs review, and runs pure-Swift keyword search.</td>
+                <td class="pass-mark">AskService</td>
+              </tr>
+              <tr>
+                <td><strong>Destructive Tool Calls</strong></td>
+                <td><code>searchSavedPosts</code> is strictly read-only; deleting posts requires user tap + SwiftUI <code>confirmationDialog</code>.</td>
+                <td class="pass-mark">SearchTool + UI</td>
+              </tr>
+              <tr>
+                <td><strong>Accessibility</strong></td>
+                <td>Dynamic Type scaling, VoiceOver card/chip labels, and <code>accessibilityReduceMotion</code> support across Ask and Library.</td>
+                <td class="pass-mark">SwiftUI Views</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <footer class="slide-footer">
+          <span>Déjà View, Production Readiness</span>
+          <span>09 / 11</span>
+        </footer>
+      </section>
+
+      <!-- SLIDE 9: WHY ON-DEVICE & INDONESIA-FIRST -->
+      <section class="slide" data-title="Why On-Device & Indonesia-First" data-sub="Privacy, Airplane Mode proof, and bilingual caption matching" data-notes="2:35-3:00 beat: Saved posts reveal personal interests, hobbies, shopping, politics, and travel. Keeping everything on-device guarantees privacy, $0 API cost, and offline recall in Airplane Mode. Also explain the bilingual trick in LibrarySearch: Indonesian query words like 'resep' are matched directly against original captions even while summaries stay English.">
+        <header class="slide-top">
+          <span class="slide-section">09 / Why On-Device &amp; Indonesia-First</span>
+          <span class="slide-meta">Privacy, economics, localization</span>
+        </header>
+        <div class="slide-body">
+          <h2>Personal bookmarks stay on your iPhone.</h2>
+
+          <div class="figure-row">
+            <div class="figure-cell">
+              <span class="figure-val">0</span>
+              <h3>External servers</h3>
+              <p class="ledger-desc">SwiftData in App Group with <code>cloudKitDatabase: .none</code>.</p>
+            </div>
+            <div class="figure-cell">
+              <span class="figure-val figure-val--accent">$0</span>
+              <h3>Per-request AI cost</h3>
+              <p class="ledger-desc">Full Ask, OCR, and classification work in Airplane Mode.</p>
+            </div>
+            <div class="figure-cell">
+              <span class="figure-val">2</span>
+              <h3>OCR languages built in</h3>
+              <p class="ledger-desc"><code>VNRecognizeTextRequest</code> requests both <code>en-US</code> and <code>id-ID</code>.</p>
+            </div>
+          </div>
+
+          <div class="surface-ticks">
+            <h3>Bilingual query bridge for Indonesian social feeds</h3>
+            <p class="ledger-desc" style="font-size:14.5px; line-height:1.5;">
+              <code>SavedPost</code> preserves the original <code>caption</code> alongside English summaries. In <code>LibrarySearch.run(_:)</code>, raw words from the user’s question that appear in saved captions (such as <code>“resep”</code>) are merged with the tool’s English keywords, so Indonesian searches hit immediately.
+            </p>
+          </div>
+        </div>
+        <footer class="slide-footer">
+          <span>Déjà View, Privacy &amp; Localization</span>
+          <span>10 / 11</span>
+        </footer>
+      </section>
+
+      <!-- SLIDE 10: DEMO RUNBOOK, TEAM & NEXT -->
+      <section class="slide" data-title="Demo Flow, Team & Next" data-sub="3-minute live runbook, A/B/C tracks, and roadmap" data-notes="Final slide: confirm the 4 beats of the 3-minute demo, credit the 3 parallel tracks (A Capture, B Understand, C Find), highlight the immediate roadmap (iOS 27 screenshot automation, Siri/App Intents, showLibrary tool, on-device embeddings), and open for Q&A.">
+        <header class="slide-top">
+          <span class="slide-section">10 / Demo Runbook, Team &amp; Roadmap</span>
+          <span class="slide-meta">3-Minute Live Demo</span>
+        </header>
+        <div class="slide-body">
+          <div class="split-4">
+            <div class="surface-well surface-well--compact">
+              <span class="outline-pill">0:00 to 0:20</span>
+              <h3>1. Hook</h3>
+              <p class="ledger-desc">State the 6-app save problem and introduce Déjà View.</p>
+            </div>
+            <div class="surface-ticks" style="padding:var(--space-4);">
+              <span class="signal-pill">0:20 to 2:00</span>
+              <h3>2. Live Demo</h3>
+              <p class="ledger-desc">Save post, switch on Airplane Mode, run Ask, test “resep”, show honest empty state.</p>
+            </div>
+            <div class="surface-well surface-well--compact">
+              <span class="outline-pill">2:00 to 2:35</span>
+              <h3>3. Code</h3>
+              <p class="ledger-desc">Walk through <code>SearchSavedPostsTool</code> and <code>PostAnalysis</code> in Xcode.</p>
+            </div>
+            <div class="surface-well surface-well--compact">
+              <span class="outline-pill">2:35 to 3:00</span>
+              <h3>4. Why &amp; Next</h3>
+              <p class="ledger-desc">Privacy, $0 offline cost, and iOS 27 roadmap.</p>
+            </div>
+          </div>
+
+          <div class="split-2">
+            <div class="surface-well">
+              <h3>3-Track Parallel Build</h3>
+              <ul class="ledger-list">
+                <li>
+                  <span class="ledger-title">Person A (Capture)</span>
+                  <span class="ledger-desc"><code>Shared/</code> SwiftData model, <code>LinkFetcher</code>, <code>AddLinkView</code>, <code>DejaViewShare</code></span>
+                </li>
+                <li>
+                  <span class="ledger-title">Person B (Understand)</span>
+                  <span class="ledger-desc"><code>PostAnalyzer</code>, <code>PostProcessor</code>, <code>OCRService</code>, <code>ModelErrors</code></span>
+                </li>
+                <li>
+                  <span class="ledger-title">Person C (Find)</span>
+                  <span class="ledger-desc"><code>SearchSavedPostsTool</code>, <code>SearchEngine</code>, <code>AskService</code>, SwiftUI Views</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="surface-well">
+              <h3>What’s Next</h3>
+              <ul class="ledger-list">
+                <li>
+                  <span class="ledger-title">iOS 27 Screenshot Automation</span>
+                  <span class="ledger-desc">Auto-ingest new social screenshots and run Vision OCR in background.</span>
+                </li>
+                <li>
+                  <span class="ledger-title">Siri, App Intents &amp; <code>showLibrary</code> Tool</span>
+                  <span class="ledger-desc">Hands-free recall plus UI-driving category filter transitions.</span>
+                </li>
+                <li>
+                  <span class="ledger-title">On-Device Semantic Embeddings</span>
+                  <span class="ledger-desc">Match conceptual queries even when zero exact words overlap.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <footer class="slide-footer">
+          <span>Déjà View, You’ve seen it before. Now you can find it again.</span>
+          <span>11 / 11</span>
+        </footer>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Speaker Notes Drawer -->
+  <aside class="notes-drawer" id="notesDrawer" aria-label="Speaker notes">
+    <div class="notes-head" id="notesTitle">Speaker Notes</div>
+    <p class="notes-body" id="notesBody"></p>
+  </aside>
+
+  <!-- Overview Grid Modal -->
+  <div class="grid-modal" id="gridModal" aria-label="Slide overview">
+    <div style="display:flex; justify-content:space-between; align-items:center; max-width:1200px; width:100%; margin:0 auto;">
+      <h2>All Slides</h2>
+      <button class="hud-btn active" onclick="toggleGrid(false)">Close</button>
+    </div>
+    <div class="overview-grid" id="overviewGrid"></div>
+  </div>
+
+  <!-- Bottom HUD -->
+  <nav class="hud" aria-label="Presentation controls">
+    <button class="hud-btn" onclick="prevSlide()" title="Previous slide">Prev</button>
+    <span class="hud-counter" id="slideCounter">01 / 11</span>
+    <button class="hud-btn" onclick="nextSlide()" title="Next slide">Next</button>
+    <span class="hud-sep"></span>
+    <button class="hud-btn" id="notesBtn" onclick="toggleNotes()" title="Speaker notes (N)">Notes</button>
+    <button class="hud-btn" onclick="toggleGrid()" title="Slide overview (G)">Grid</button>
+    <button class="hud-btn" onclick="toggleTheme()" title="Toggle light/dark theme (T)">Theme</button>
+    <button class="hud-btn" onclick="window.print()" title="Print / Save as PDF">PDF</button>
+  </nav>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const counterEl = document.getElementById('slideCounter');
+    const progressFill = document.getElementById('progressFill');
+    const notesDrawer = document.getElementById('notesDrawer');
+    const notesBtn = document.getElementById('notesBtn');
+    const notesTitle = document.getElementById('notesTitle');
+    const notesBody = document.getElementById('notesBody');
+    const gridModal = document.getElementById('gridModal');
+    const overviewGrid = document.getElementById('overviewGrid');
+    let current = 0;
+
+    const ASK_SCENARIOS = {
+      design: {
+        chip: 'Searched: design, last 7 days',
+        answer: 'You saved 2 design posts this week, including an Indonesian designer discussing AI and a Winter 2026 Behance concept.',
+        input: 'Design posts from this week',
+        rows: [
+          { title: 'Indonesian designer warns creators not to fall behind AI.', why: 'Why: Design, ‘designer’ in caption', meta: 'Instagram, 2d ago' },
+          { title: 'Winter 2026 conceptual design prompts on Behance.', why: 'Why: Design, ‘design’ in tags', meta: 'Web, 4d ago' }
+        ]
+      },
+      resep: {
+        chip: 'Searched: resep (caption match)',
+        answer: 'You saved 1 recipe matching “resep”: a 15-minute ayam geprek sambal bawang post from TikTok.',
+        input: 'resep',
+        rows: [
+          { title: '15-minute ayam geprek sambal bawang recipe.', why: 'Why: Food & Recipes, ‘resep’ in caption', meta: 'TikTok, 3d ago' }
+        ]
+      },
+      empty: {
+        chip: 'Searched: travel, yesterday',
+        answer: 'No saved posts matched Travel from yesterday. Nothing was found.',
+        input: 'Travel posts from yesterday',
+        rows: [
+          { title: 'Nothing saved about that yet.', why: 'Honest tool result prevents hallucinated posts.', meta: 'AskService' }
+        ]
+      }
+    };
+
+    function buildOverview() {
+      overviewGrid.innerHTML = '';
+      slides.forEach((s, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'overview-tile' + (idx === current ? ' current' : '');
+        btn.innerHTML = `
+          <div style="font-size:12px; color:var(--color-accent); margin-bottom:var(--space-1); font-variant-numeric:tabular-nums;">Slide ${String(idx + 1).padStart(2, '0')}</div>
+          <div style="font-size:15px; font-weight:650; margin-bottom:var(--space-1);">${s.dataset.title || 'Slide ' + (idx + 1)}</div>
+          <div style="font-size:12.5px; color:var(--color-muted); line-height:1.38;">${s.dataset.sub || ''}</div>
+        `;
+        btn.onclick = () => { goToSlide(idx); toggleGrid(false); };
+        overviewGrid.appendChild(btn);
+      });
+    }
+
+    function goToSlide(index) {
+      current = Math.max(0, Math.min(slides.length - 1, index));
+      slides.forEach((s, i) => s.classList.toggle('active', i === current));
+      const num = String(current + 1).padStart(2, '0');
+      const total = String(slides.length).padStart(2, '0');
+      counterEl.textContent = `${num} / ${total}`;
+      progressFill.style.transform = `scaleX(${(current + 1) / slides.length})`;
+      notesTitle.textContent = `Slide ${num}, ${slides[current].dataset.title}`;
+      notesBody.textContent = slides[current].dataset.notes || '';
+      if (gridModal.classList.contains('open')) buildOverview();
+    }
+
+    function nextSlide() { if (current < slides.length - 1) goToSlide(current + 1); }
+    function prevSlide() { if (current > 0) goToSlide(current - 1); }
+
+    function toggleNotes(force) {
+      const open = typeof force === 'boolean' ? force : !notesDrawer.classList.contains('open');
+      notesDrawer.classList.toggle('open', open);
+      notesBtn.classList.toggle('active', open);
+    }
+
+    function toggleGrid(force) {
+      const open = typeof force === 'boolean' ? force : !gridModal.classList.contains('open');
+      if (open) buildOverview();
+      gridModal.classList.toggle('open', open);
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+    }
+
+    function showPhoneScreen(id, btn) {
+      document.querySelectorAll('.mock-screen').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.screen-btn').forEach(el => el.classList.remove('active'));
+      const target = document.getElementById('phone-' + id);
+      if (target) target.classList.add('active');
+      if (btn) btn.classList.add('active');
+
+      const tabMap = { library: 'tab-library', ask: 'tab-ask', detail: 'tab-library', review: 'tab-review' };
+      ['tab-library', 'tab-ask', 'tab-review'].forEach(t => {
+        document.getElementById(t).classList.toggle('ios-tab-on', tabMap[id] === t);
+      });
+    }
+
+    function setAskQuery(key, btn) {
+      const data = ASK_SCENARIOS[key];
+      if (!data) return;
+      document.querySelectorAll('.sim-pill').forEach(p => p.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+
+      const askBtn = document.querySelector('.screen-btn');
+      showPhoneScreen('ask', askBtn);
+
+      document.getElementById('askChip').textContent = data.chip;
+      document.getElementById('askAnswer').textContent = data.answer;
+      document.getElementById('askInput').textContent = data.input;
+      document.getElementById('askResults').innerHTML = data.rows.map(r => `
+        <div class="ios-row">
+          <span class="ios-row-title">${r.title}</span>
+          <span class="ios-row-why">${r.why}</span>
+          <span class="ios-row-meta">${r.meta}</span>
+        </div>
+      `).join('');
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key.toLowerCase() === 'n') {
+        toggleNotes();
+      } else if (e.key.toLowerCase() === 'g') {
+        toggleGrid();
+      } else if (e.key.toLowerCase() === 't') {
+        toggleTheme();
+      } else if (e.key.toLowerCase() === 'f') {
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+        else document.exitFullscreen?.();
+      } else if (e.key === 'Escape') {
+        toggleGrid(false);
+        toggleNotes(false);
+      } else if (e.key >= '1' && e.key <= '9') {
+        goToSlide(Number(e.key) - 1);
+      } else if (e.key === '0') {
+        goToSlide(9);
+      }
+    });
+
+    goToSlide(0);
+  </script>
+</body>
+</html>
