@@ -31,8 +31,10 @@ struct AskView: View {
                         resultsState
                     }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(16)
             }
+            .frame(maxWidth: .infinity)
             .dismissKeyboardOnTap()
             .background {
                 LinearGradient(colors: [Color.accentColor.opacity(0.10), Color(.systemBackground)],
@@ -118,6 +120,7 @@ struct AskView: View {
             }
             if service.isResponding && service.answerText.isEmpty {
                 ProgressView("Searching…")
+                    .frame(maxWidth: .infinity, alignment: .center)
             }
             if !service.answerText.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {

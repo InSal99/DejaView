@@ -1,17 +1,25 @@
 import SwiftUI
 import SwiftData
 import PhotosUI
+import CoreTransferable
+import AVFoundation
+import UniformTypeIdentifiers
 
 struct AddLinkView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @Environment(PostProcessor.self) private var processor
+    @Environment(\.openURL) private var openURL
 
     @State private var linkText = ""
     @State private var errorMessage: String?
     @State private var pickedItem: PhotosPickerItem?
+    @State private var showPhotos = false
     @State private var isLoadingImage = false
     @State private var showCamera = false
+    @State private var capturedPhoto: UIImage?
+    @State private var isRequestingCamera = false
+    @State private var showCameraSettings = false
     @FocusState private var linkFocused: Bool
 
     var body: some View {
@@ -28,34 +36,34 @@ struct AddLinkView: View {
                         .onSubmit(saveLink)
                         .onChange(of: linkText) { _, _ in errorMessage = nil }
                         .listRowBackground(Color(.secondarySystemBackground))
-                } footer: {
-                    if let errorMessage {
-                        Text(errorMessage)
-                            .font(.caption)
-                            .foregroundStyle(.red)
-                    }
                 }
 
                 Section {
-                    PhotosPicker(selection: $pickedItem, matching: .images) {
-                        Label("Pick a screenshot", systemImage: "photo.on.rectangle")
+                    Button("Pick a screenshot", systemImage: "photo.on.rectangle") {
+                        linkFocused = false
+                        errorMessage = nil
+                        showPhotos = true
                     }
-                    .disabled(isLoadingImage)
+                    .disabled(isLoadingImage || isRequestingCamera)
                     .listRowBackground(Color(.secondarySystemBackground))
 
-                    if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                        Button {
-                            showCamera = true
-                        } label: {
-                            Label("Take a photo", systemImage: "camera")
-                        }
-                        .disabled(isLoadingImage)
-                        .listRowBackground(Color(.secondarySystemBackground))
+                    Button("Take a photo", systemImage: "camera") {
+                        Task { await openCamera() }
+                    }
+                    .disabled(isLoadingImage || isRequestingCamera)
+                    .listRowBackground(Color(.secondarySystemBackground))
+
+                    if isLoadingImage {
+                        ProgressView("Importing image…")
+                    }
+                } footer: {
+                    if let errorMessage {
+                        Text(errorMessage).foregroundStyle(.red)
                     }
                 }
             }
             .surfaceForm()
-            .dismissKeyboardOnTap()
+            .scrollDismissesKeyboard(.interactively)
             .navigationTitle("Save a post")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -64,23 +72,32 @@ struct AddLinkView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save", action: saveLink)
-                        .disabled(linkText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                        .disabled(isLoadingImage || isRequestingCamera || linkText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
             }
-            .onChange(of: pickedItem) { _, item in
-                if let item { Task { await saveScreenshot(item) } }
-            }
             .onAppear(perform: prefillFromClipboard)
-            .fullScreenCover(isPresented: $showCamera) {
-                CameraPicker(
-                    onImage: { image in
-                        showCamera = false
-                        savePhoto(image)
-                    },
-                    onCancel: { showCamera = false }
-                )
-                .ignoresSafeArea()
+        }
+        .photosPicker(isPresented: $showPhotos, selection: $pickedItem, matching: .images)
+        .task(id: pickedItem) {
+            if let pickedItem { await saveScreenshot(pickedItem) }
+        }
+        .fullScreenCover(isPresented: $showCamera, onDismiss: saveCapturedPhoto) {
+            CameraPicker(
+                onImage: { image in
+                    capturedPhoto = image
+                    showCamera = false
+                },
+                onCancel: { showCamera = false }
+            )
+            .ignoresSafeArea()
+        }
+        .alert("Camera access is off", isPresented: $showCameraSettings) {
+            Button("Open Settings") {
+                if let url = URL(string: UIApplication.openSettingsURLString) { openURL(url) }
             }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("Allow camera access in Settings to take a photo.")
         }
         .presentationDetents([.medium])
     }
@@ -99,6 +116,7 @@ struct AddLinkView: View {
     }
 
     private func saveLink() {
+        guard !isLoadingImage, !isRequestingCamera else { return }
         guard let url = Self.extractURL(from: linkText) else {
             errorMessage = "That doesn't look like a link"
             return
@@ -109,17 +127,51 @@ struct AddLinkView: View {
 
     private func saveScreenshot(_ item: PhotosPickerItem) async {
         isLoadingImage = true
-        defer { isLoadingImage = false }
-        guard let data = try? await item.loadTransferable(type: Data.self),
-              let jpeg = ImageTools.downscaledJPEG(data) else {
-            errorMessage = "Couldn't read that image"
-            pickedItem = nil
+        defer {
+            isLoadingImage = false
+            if pickedItem == item { pickedItem = nil }
+        }
+        let image = try? await item.loadTransferable(type: ImportedPostImage.self)
+        guard !Task.isCancelled else { return }
+        guard let image, let jpeg = ImageTools.downscaledJPEG(image.data) else {
+            errorMessage = "Couldn't import that image. Try downloading it in Photos or choose another image."
             return
         }
         insertAndProcess(SavedPost(platform: .screenshot, imageData: jpeg))
     }
 
-    private func savePhoto(_ image: UIImage) {
+    private func openCamera() async {
+        guard !isLoadingImage, !isRequestingCamera else { return }
+        linkFocused = false
+        errorMessage = nil
+        guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
+            errorMessage = "This device doesn't have a camera available. Pick an image from Photos instead."
+            return
+        }
+
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized:
+            showCamera = true
+        case .notDetermined:
+            isRequestingCamera = true
+            defer { isRequestingCamera = false }
+            if await AVCaptureDevice.requestAccess(for: .video) {
+                showCamera = true
+            } else {
+                showCameraSettings = true
+            }
+        case .denied:
+            showCameraSettings = true
+        case .restricted:
+            errorMessage = "Camera access is restricted on this device."
+        @unknown default:
+            errorMessage = "The camera isn't available right now."
+        }
+    }
+
+    private func saveCapturedPhoto() {
+        guard let image = capturedPhoto else { return }
+        capturedPhoto = nil
         guard let data = image.jpegData(compressionQuality: 0.9),
               let jpeg = ImageTools.downscaledJPEG(data) else {
             errorMessage = "Couldn't read that photo"
@@ -131,7 +183,13 @@ struct AddLinkView: View {
     private func insertAndProcess(_ post: SavedPost) {
         post.status = .pending
         modelContext.insert(post)
-        try? modelContext.save()
+        do {
+            try modelContext.save()
+        } catch {
+            modelContext.delete(post)
+            errorMessage = "Couldn't save this post. Please try again."
+            return
+        }
         let context = modelContext
         let processor = processor
         dismiss()
@@ -159,5 +217,13 @@ struct AddLinkView: View {
             }
         }
         return nil
+    }
+}
+
+private struct ImportedPostImage: Transferable {
+    let data: Data
+
+    static var transferRepresentation: some TransferRepresentation {
+        DataRepresentation(importedContentType: .image) { ImportedPostImage(data: $0) }
     }
 }

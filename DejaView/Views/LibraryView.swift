@@ -25,6 +25,10 @@ struct LibraryView: View {
         }
     }
 
+    private var showsAllPosts: Bool {
+        source == .all && category == nil && searchText.isEmpty
+    }
+
     private var filteredPosts: [SavedPost] {
         var base = posts.filter { source.includes($0.sourceKind) && (category == nil || $0.category == category) }
         let words = SearchEngine.keywords(fromRaw: searchText)
@@ -49,53 +53,43 @@ struct LibraryView: View {
                         Button("Paste a link") { showingAddLink = true }
                     }
                 } else {
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: 16) {
-                            ScrollView(.horizontal) {
-                                HStack(spacing: 8) {
-                                    sourceMenu
-                                    filterChip(selected: category == nil) { category = nil } label: {
-                                        Text("All").font(.caption.weight(.semibold))
-                                            .padding(.horizontal, 14).padding(.vertical, 8)
-                                            .foregroundStyle(category == nil ? Color.white : Color.accentColor)
-                                            .background(category == nil ? Color.accentColor : Color.accentColor.opacity(0.15), in: Capsule())
+                    VStack(spacing: 0) {
+                        filters
+                            .padding(.top, 16)
+                            .padding(.bottom, 24)
+
+                        ScrollView {
+                            VStack(alignment: .leading, spacing: 16) {
+                                if filteredPosts.isEmpty {
+                                    ContentUnavailableView {
+                                        Label("No matching posts", systemImage: "line.3.horizontal.decrease.circle")
+                                    } description: {
+                                        Text("Try a different source or category.")
+                                    } actions: {
+                                        Button("Clear filters", action: clearFilters)
                                     }
-                                    ForEach(PostCategory.allCases.filter { candidate in posts.contains { $0.category == candidate } }, id: \.self) { candidate in
-                                        filterChip(selected: category == candidate) { category = candidate } label: {
-                                            CategoryChip(category: candidate, selected: category == candidate)
+                                } else {
+                                    LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: dynamicTypeSize.isAccessibilitySize ? 1 : 2), spacing: 12) {
+                                        ForEach(filteredPosts) { post in
+                                            NavigationLink { PostDetailView(post: post) } label: { PostCardView(post: post) }
+                                                .buttonStyle(.plain)
+                                                .contextMenu {
+                                                    if let url = originalURL(for: post) {
+                                                        Link(destination: url) { Label("Open original", systemImage: "arrow.up.right.square") }
+                                                    }
+                                                    Button("Delete", systemImage: "trash", role: .destructive) { postToDelete = post }
+                                                }
                                         }
                                     }
                                 }
-                            }
-                            .scrollIndicators(.hidden)
-
-                            if filteredPosts.isEmpty {
-                                ContentUnavailableView {
-                                    Label("No matching posts", systemImage: "line.3.horizontal.decrease.circle")
-                                } description: {
-                                    Text("Try a different source or category.")
-                                } actions: {
-                                    Button("Clear filters") { source = .all; category = nil; searchText = "" }
-                                }
-                            } else {
-                                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: dynamicTypeSize.isAccessibilitySize ? 1 : 2), spacing: 12) {
-                                    ForEach(filteredPosts) { post in
-                                        NavigationLink { PostDetailView(post: post) } label: { PostCardView(post: post) }
-                                            .buttonStyle(.plain)
-                                            .contextMenu {
-                                                if let url = originalURL(for: post) {
-                                                    Link(destination: url) { Label("Open original", systemImage: "arrow.up.right.square") }
-                                                }
-                                                Button("Delete", systemImage: "trash", role: .destructive) { postToDelete = post }
-                                            }
-                                    }
+                                if let errorMessage {
+                                    Text(errorMessage).font(.footnote).foregroundStyle(.red)
                                 }
                             }
-                            if let errorMessage {
-                                Text(errorMessage).font(.footnote).foregroundStyle(.red)
-                            }
+                            .padding(.horizontal, 16)
+                            .padding(.bottom, 16)
                         }
-                        .padding(16)
+                        .scrollDismissesKeyboard(.interactively)
                     }
                 }
             }
@@ -127,6 +121,28 @@ struct LibraryView: View {
         }
     }
 
+    private var filters: some View {
+        ScrollView(.horizontal) {
+            HStack(spacing: 8) {
+                sourceMenu
+                filterChip(selected: showsAllPosts, action: clearFilters) {
+                    Text("All").font(.caption.weight(.semibold))
+                        .padding(.horizontal, 14).padding(.vertical, 8)
+                        .foregroundStyle(showsAllPosts ? Color.white : Color.accentColor)
+                        .background(showsAllPosts ? Color.accentColor : Color.accentColor.opacity(0.15), in: Capsule())
+                }
+                .accessibilityLabel("All posts")
+                ForEach(PostCategory.allCases.filter { candidate in posts.contains { $0.category == candidate } }, id: \.self) { candidate in
+                    filterChip(selected: category == candidate) { category = candidate } label: {
+                        CategoryChip(category: candidate, selected: category == candidate)
+                    }
+                }
+            }
+        }
+        .scrollIndicators(.hidden)
+        .contentMargins(.horizontal, 16, for: .scrollContent)
+    }
+
     /// Source filter as a chip with a menu, so there is one filter row.
     private var sourceMenu: some View {
         Menu {
@@ -148,10 +164,16 @@ struct LibraryView: View {
     /// A tappable chip with a 44 pt target; the visible chip keeps its size.
     private func filterChip<Label: View>(selected: Bool, action: @escaping () -> Void, @ViewBuilder label: () -> Label) -> some View {
         Button(action: action) {
-            label().frame(minHeight: 44).contentShape(Rectangle())
+            label().frame(minWidth: 44, minHeight: 44).contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .accessibilityAddTraits(selected ? .isSelected : [])
+    }
+
+    private func clearFilters() {
+        source = .all
+        category = nil
+        searchText = ""
     }
 
     private func originalURL(for post: SavedPost) -> URL? {
