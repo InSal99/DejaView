@@ -34,6 +34,11 @@ struct AskView: View {
                 .padding(16)
             }
             .dismissKeyboardOnTap()
+            .background {
+                LinearGradient(colors: [Color.accentColor.opacity(0.10), Color(.systemBackground)],
+                               startPoint: .top, endPoint: .center)
+                    .ignoresSafeArea()
+            }
             .navigationTitle("Search")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -50,19 +55,21 @@ struct AskView: View {
                     }
                 }
             }
-            .safeAreaInset(edge: .bottom) { searchField }
+            .safeAreaInset(edge: .bottom) {
+                if service.hasAsked { searchField }
+            }
         }
     }
 
     // MARK: Empty state
 
     private var emptyState: some View {
-        VStack(alignment: .leading, spacing: 24) {
-            VStack(spacing: 10) {
+        VStack(alignment: .leading, spacing: 20) {
+            VStack(spacing: 8) {
                 Image("AppLogo")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 88, height: 88)
+                    .frame(width: 72, height: 72)
                     .accessibilityHidden(true)
                 Text("Déjà View")
                     .font(.largeTitle.bold())
@@ -72,7 +79,10 @@ struct AskView: View {
                     .multilineTextAlignment(.center)
             }
             .frame(maxWidth: .infinity)
-            .padding(.top, 12)
+            .padding(.top, 4)
+
+            searchField
+                .padding(.horizontal, -16)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text("Try asking…")

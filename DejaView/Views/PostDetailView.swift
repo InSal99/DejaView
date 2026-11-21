@@ -106,9 +106,12 @@ struct PostDetailView: View {
             }
             Text(post.displayTitle)
                 .font(.title2.bold())
-            Text("\(post.platform.displayName) · \(post.savedAt.staticSaved)")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+            HStack(spacing: 16) {
+                Label(post.platform.displayName, systemImage: post.platform.symbol)
+                Label(post.savedAt.staticSaved, systemImage: "calendar")
+            }
+            .font(.subheadline)
+            .foregroundStyle(.secondary)
             if let originalURL {
                 Link(destination: originalURL) {
                     Label("Open original", systemImage: "arrow.up.right.square")

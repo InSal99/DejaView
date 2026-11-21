@@ -144,7 +144,7 @@ enum SearchEngine {
                 case .last30Days: detail = "last 30 days"
                 }
             }
-            scored.append((SearchResult(post: post, reason: "\(post.category.displayName) · \(detail)"), score))
+            scored.append((SearchResult(post: post, reason: "\(post.category.displayName): \(detail)"), score))
         }
         return scored.sorted {
             if $0.score != $1.score { return $0.score > $1.score }
