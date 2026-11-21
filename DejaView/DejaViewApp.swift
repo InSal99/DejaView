@@ -1,17 +1,22 @@
-//
-//  DejaViewApp.swift
-//  DejaView
-//
-//  Created by Training-52 on 21/11/26.
-//
-
 import SwiftUI
+import SwiftData
 
 @main
 struct DejaViewApp: App {
+    @State private var processor = PostProcessor()
+    @Environment(\.scenePhase) private var scenePhase
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
+                .environment(processor)
+                .task { PostAnalyzer.prewarm() }
+        }
+        .modelContainer(SharedContainer.container)
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active {
+                Task { await processor.processPending(in: SharedContainer.container.mainContext) }
+            }
         }
     }
 }
