@@ -163,7 +163,7 @@ Optional: iOS 26 added a search tab role (`Tab(role: .search)`) that shows Ask a
 ## App icon
 The supplied twin-cat search mark represents seeing something twice and finding it again. Use `brand/deja-view-app-icon.svg` as the source for the opaque 1024 px PNG in the iOS asset catalog. Extend the icon's background to the edges when exporting so iOS can apply its own icon mask. The in-app mark uses the primary logo.
 
-The identity palette is Déjà View Blue `#5FA1ED`, cobalt `#3B7DD8`, sky `#BED7F7`, ice `#E7F1FC`, and obsidian `#313235`. The adaptive accent uses a darker blue `#2866BB` in light mode for contrast and `#7EB8F7` in dark mode. Use blue sparingly for actions, selection, and the Design category; retain semantic system backgrounds, text, and other category colors. The voice is concise, friendly, and centered on search, finding, recall, and assistance. See `brand/brand-identity.html` for the complete identity and asset usage.
+The identity blue is Apple's system blue: `#007AFF` in light mode and `#0A84FF` in dark mode (the app's default accent, so no custom colour asset). Supporting tints are sky `#B3D7FF` and ice `#EBF4FF`, with obsidian `#313235` for the cats. Use blue for actions and selection; retain semantic system backgrounds, text, and category colors (Design is purple). The voice is concise, friendly, and centered on search, finding, recall, and assistance. See `brand/brand-identity.html` for the complete identity and asset usage.
 
 ## Demo checklist (design)
 - [ ] Large text on, iPhone 17 Pro (or Pro Max simulator) for the projector.
