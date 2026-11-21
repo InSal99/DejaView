@@ -1,0 +1,30 @@
+# Xcode personal state (changes every time someone opens the project)
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+
+# Build output
+DerivedData/
+build/
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.build/
+.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+Package.resolved
+
+# Local signing overrides (each person's team ID)
+Local.xcconfig
+
+# macOS
+.DS_Store
+
+# Demo recordings and large media (keep outside the repo)
+*.mov
+*.mp4
+
+# Leftovers to delete by hand
+_to_delete/
