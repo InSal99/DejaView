@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 160" width="640" height="160" fill="none">
+  <defs>
+    <linearGradient id="dv-lens-grad" x1="120" y1="20" x2="340" y2="395" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#B9D5F7" />
+      <stop offset="48%" stop-color="#87B5EE" />
+      <stop offset="100%" stop-color="#5B9CEB" />
+    </linearGradient>
+    <linearGradient id="dv-back-cat" x1="210" y1="104" x2="290" y2="355" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#565A5E" />
+      <stop offset="55%" stop-color="#36393D" />
+      <stop offset="100%" stop-color="#4A4E53" />
+    </linearGradient>
+    <linearGradient id="dv-front-cat" x1="80" y1="135" x2="210" y2="355" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#222427" />
+      <stop offset="100%" stop-color="#191B1E" />
+    </linearGradient>
+    <clipPath id="dv-inner-lens">
+      <circle cx="196.5" cy="200" r="147" />
+    </clipPath>
+  </defs>
+
+  <!-- Vector Logo -->
+  <g transform="translate(14 14) scale(0.315)">
+    <path d="M312 316 L383 387" stroke="url(#dv-lens-grad)" stroke-width="40" stroke-linecap="round" />
+    <circle cx="196.5" cy="200" r="160" fill="#FFFFFF" />
+    <g clip-path="url(#dv-inner-lens)">
+      <path d="M174 365 L174 176 C184 148 198 118 212 106 C217 102 223 103 227 109 L243 135 C254 137 265 137 274 133 L294 117 C300 112 306 115 308 122 L314 166 C324 182 330 198 329 214 C328 234 316 248 300 258 C287 267 281 284 279 310 L276 365 Z" fill="url(#dv-back-cat)" />
+      <ellipse cx="270" cy="194" rx="7.2" ry="12.5" transform="rotate(-6 270 194)" fill="#FFFFFF" />
+      <ellipse cx="308" cy="195" rx="5.8" ry="12" transform="rotate(-4 308 195)" fill="#FFFFFF" />
+      <path d="M40 365 L48 238 C62 218 76 198 86 182 C96 160 107 139 118 131 C123 128 129 130 133 136 L149 162 C160 165 170 165 180 161 L200 143 C206 138 213 141 215 149 L220 189 C230 205 235 222 234 239 C232 259 218 274 202 284 C190 293 184 312 183 340 L182 365 Z" fill="url(#dv-front-cat)" stroke="#FFFFFF" stroke-width="6.5" stroke-linejoin="round" />
+      <ellipse cx="171" cy="222" rx="6.8" ry="12.5" transform="rotate(-6 171 222)" fill="#FFFFFF" />
+      <ellipse cx="211" cy="221" rx="5.8" ry="12" transform="rotate(-4 211 221)" fill="#FFFFFF" />
+    </g>
+    <circle cx="196.5" cy="200" r="172" stroke="url(#dv-lens-grad)" stroke-width="29" />
+  </g>
+
+  <!-- Vertical Hairline -->
+  <line x1="168" y1="36" x2="168" y2="124" stroke="#D1DCF0" stroke-width="1.5" />
+
+  <!-- Wordmark + Tagline -->
+  <text x="192" y="84" fill="#1C1E22" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif" font-size="52" font-weight="700" letter-spacing="-1.6">Déjà View</text>
+  <text x="194" y="118" fill="#505455" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif" font-size="18" font-weight="500" letter-spacing="-0.2">You’ve seen it before. Now you can find it again.</text>
+</svg>
