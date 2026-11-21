@@ -33,9 +33,23 @@ struct AskView: View {
                 }
                 .padding(16)
             }
-            .scrollDismissesKeyboard(.interactively)
+            .dismissKeyboardOnTap()
             .navigationTitle("Search")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                if service.hasAsked {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button {
+                            question = ""
+                            fieldFocused = false
+                            service.reset()
+                        } label: {
+                            Label("New search", systemImage: "chevron.left")
+                        }
+                        .disabled(service.isResponding)
+                    }
+                }
+            }
             .safeAreaInset(edge: .bottom) { searchField }
         }
     }

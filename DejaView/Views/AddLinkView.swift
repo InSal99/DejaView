@@ -51,6 +51,7 @@ struct AddLinkView: View {
                     }
                 }
             }
+            .dismissKeyboardOnTap()
             .navigationTitle("Save a post")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

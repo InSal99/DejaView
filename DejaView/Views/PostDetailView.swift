@@ -59,6 +59,7 @@ struct PostDetailView: View {
                 .padding(.bottom, 24)
             }
         }
+        .dismissKeyboardOnTap()
         .navigationTitle("Post")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
