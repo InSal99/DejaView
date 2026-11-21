@@ -3,6 +3,10 @@ import SwiftData
 
 enum PostStatus: String, Codable { case pending, processed, needsReview }
 
+enum SourceKind: String, CaseIterable {
+    case post, screenshot, link
+}
+
 @Model
 final class SavedPost {
     @Attribute(.unique) var id: UUID
@@ -21,6 +25,10 @@ final class SavedPost {
     var statusMessage: String        // e.g. "No text found — add a note"
     var userNote: String
     var processedWithAI: Bool
+    // Added in the improvement round. Defaults let SwiftData migrate existing stores.
+    var title: String = ""
+    var summaryDescription: String = ""
+    var keyPoints: [String] = []
 
     init(urlString: String? = nil, platform: Platform, imageData: Data? = nil) {
         self.id = UUID()
@@ -42,6 +50,25 @@ final class SavedPost {
     }
 
     var platform: Platform { Platform(rawValue: platformRaw) ?? .web }
+
+    /// Best available title: title, else summary, else the first 60 characters of the caption.
+    var displayTitle: String {
+        let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedTitle.isEmpty { return trimmedTitle }
+        let trimmedSummary = summary.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedSummary.isEmpty { return trimmedSummary }
+        let trimmedCaption = caption.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedCaption.isEmpty { return String(trimmedCaption.prefix(60)) }
+        return "Untitled post"
+    }
+
+    var sourceKind: SourceKind {
+        switch platform {
+        case .screenshot: .screenshot
+        case .web: .link
+        default: .post
+        }
+    }
 
     var category: PostCategory {
         get { PostCategory(rawValue: categoryRaw) ?? .other }
