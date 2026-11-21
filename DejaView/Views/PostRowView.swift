@@ -23,11 +23,12 @@ private extension String {
     var capitalizedFirst: String { prefix(1).uppercased() + dropFirst() }
 }
 
-/// List row: 72×72 thumbnail, title, "platform · date", optional tag chips and a "…" menu.
+/// List row with optional category, tags, and original-link menu.
 struct PostRowView: View {
     let post: SavedPost
     var showsTags = false
-    var onDelete: (() -> Void)?
+    var showsCategory = false
+    var showsOriginalMenu = true
 
     @Environment(\.openURL) private var openURL
 
@@ -52,6 +53,14 @@ struct PostRowView: View {
                 Text("\(post.platform.displayName) · \(post.savedAt.staticAgo)")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                if showsCategory {
+                    Label {
+                        Text(post.category.displayName).foregroundStyle(.secondary)
+                    } icon: {
+                        Image(systemName: post.category.symbol).foregroundStyle(post.category.color)
+                    }
+                        .font(.caption.weight(.semibold))
+                }
                 if showsTags, !post.tags.isEmpty {
                     HStack(spacing: 6) {
                         ForEach(post.tags.prefix(3), id: \.self) { tag in
@@ -67,14 +76,9 @@ struct PostRowView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
-            if onDelete != nil || originalURL != nil {
+            if showsOriginalMenu, let originalURL {
                 Menu {
-                    if let originalURL {
-                        Button("Open original", systemImage: "arrow.up.right.square") { openURL(originalURL) }
-                    }
-                    if let onDelete {
-                        Button("Delete", systemImage: "trash", role: .destructive, action: onDelete)
-                    }
+                    Button("Open original", systemImage: "arrow.up.right.square") { openURL(originalURL) }
                 } label: {
                     Image(systemName: "ellipsis")
                         .frame(width: 36, height: 36)

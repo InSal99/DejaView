@@ -5,6 +5,7 @@ struct LibraryView: View {
     @Environment(\.modelContext) private var context
     @Query(sort: \SavedPost.savedAt, order: .reverse) private var posts: [SavedPost]
     @State private var source: SourceFilter = .all
+    @State private var category: PostCategory?
     @State private var showingAddLink = false
     @State private var postToDelete: SavedPost?
     @State private var errorMessage: String?
@@ -23,7 +24,7 @@ struct LibraryView: View {
     }
 
     private var filteredPosts: [SavedPost] {
-        posts.filter { source.includes($0.sourceKind) }
+        posts.filter { source.includes($0.sourceKind) && (category == nil || $0.category == category) }
     }
 
     var body: some View {
@@ -43,7 +44,16 @@ struct LibraryView: View {
                             Picker("Source", selection: $source) {
                                 ForEach(SourceFilter.allCases) { Text($0.rawValue).tag($0) }
                             }
-                            .pickerStyle(.segmented)
+                            .pickerStyle(.menu)
+                            .listRowBackground(Color.clear)
+                            .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
+                            Picker("Category", selection: $category) {
+                                Text("All categories").tag(Optional<PostCategory>.none)
+                                ForEach(PostCategory.allCases, id: \.self) { category in
+                                    Label(category.displayName, systemImage: category.symbol).tag(Optional(category))
+                                }
+                            }
+                            .pickerStyle(.menu)
                             .listRowBackground(Color.clear)
                             .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
                         }
@@ -52,12 +62,21 @@ struct LibraryView: View {
                                 NavigationLink {
                                     PostDetailView(post: post)
                                 } label: {
-                                    PostRowView(post: post) { postToDelete = post }
+                                    PostRowView(post: post, showsCategory: true, showsOriginalMenu: false)
+                                }
+                                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                    Button("Delete", systemImage: "trash") { postToDelete = post }
+                                        .tint(.red)
                                 }
                             }
                             if filteredPosts.isEmpty {
-                                Text("Nothing here yet.")
-                                    .foregroundStyle(.secondary)
+                                ContentUnavailableView {
+                                    Label("No matching posts", systemImage: "line.3.horizontal.decrease.circle")
+                                } description: {
+                                    Text("Try a different source or category.")
+                                } actions: {
+                                    Button("Clear filters") { source = .all; category = nil }
+                                }
                             }
                         }
                         if let errorMessage {

@@ -41,10 +41,10 @@ struct AskView: View {
                     ToolbarItem(placement: .topBarLeading) {
                         Button {
                             question = ""
-                            fieldFocused = false
                             service.reset()
+                            fieldFocused = true
                         } label: {
-                            Label("New search", systemImage: "chevron.left")
+                            Label("New search", systemImage: "plus")
                         }
                         .disabled(service.isResponding)
                     }
@@ -63,7 +63,6 @@ struct AskView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 88, height: 88)
-                    .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
                     .accessibilityHidden(true)
                 Text("Déjà View")
                     .font(.largeTitle.bold())
@@ -88,7 +87,7 @@ struct AskView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.vertical, 12)
                             .padding(.horizontal, 14)
-                            .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                            .background(Color.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                     }
                     .buttonStyle(.plain)
                     .disabled(service.isResponding)

@@ -20,7 +20,7 @@ enum PostCategory: String, CaseIterable, Codable {
 
     var color: Color {
         switch self {
-        case .design: .purple
+        case .design: .accentColor
         case .foodRecipes: .orange
         case .travel: .teal
         case .tech: .blue

@@ -24,23 +24,20 @@ struct PostDetailView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     Text(post.displayTitle)
                         .font(.title2.bold())
-                    Text("\(post.platform.displayName) · \(post.savedAt.staticSaved)")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("\(post.platform.displayName) · \(post.savedAt.staticSaved)")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        if let urlString = post.urlString, let url = URL(string: urlString), ["http", "https"].contains(url.scheme?.lowercased() ?? "") {
+                            Link(destination: url) { Label("Open original", systemImage: "arrow.up.right.square") }
+                        }
+                    }
+
+                    categoryMenu
 
                     summaryCard
                     keyPoints
                     tagChips
-
-                    HStack {
-                        categoryMenu
-                        Spacer()
-                    }
-
-                    if let urlString = post.urlString, let url = URL(string: urlString), ["http", "https"].contains(url.scheme?.lowercased() ?? "") {
-                        Link(destination: url) { Label("Open original", systemImage: "arrow.up.right.square") }
-                            .buttonStyle(.borderedProminent)
-                    }
 
                     noteSection
 

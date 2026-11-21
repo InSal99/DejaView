@@ -7,13 +7,13 @@ Read with `SPEC.md`. This file says how the app looks and feels; `SPEC.md` says 
 ## Principles
 1. **Native first.** Use Apple's system components and let iOS style them. On iOS 26+ tab bars, toolbars and sheets get the Liquid Glass look automatically. Don't draw custom bars, custom fonts or custom navigation.
 2. **The posts are the content.** Thumbnails lead; chrome stays quiet.
-3. **Colour and motion only where the AI acts.** Processing, results arriving and the tool chip are the moments that move. Everything else stays calm.
+3. **Brand in the details.** Use the blue accent for primary actions and selection; keep surfaces calm and reserve motion for useful feedback.
 4. **Readable on a projector.** Test every screen with large Dynamic Type.
 
 ## Rules
 - **Components:** `NavigationStack`, `TabView`, `LazyVGrid`, `List`, `.sheet`, `.searchable` / `TextField`, `ContentUnavailableView` for empty states, `PhotosPicker`.
 - **Type:** system font with text styles only (`.largeTitle`, `.title2`, `.headline`, `.body`, `.subheadline`, `.caption`). No fixed point sizes.
-- **Colour:** system colours only (`Color.purple`, `.secondary`, `.background`, `Color(.secondarySystemBackground)`), so dark mode works for free. Category colours below.
+- **Colour:** use the adaptive AccentColor asset for actions and the Design category, with semantic system surfaces and text so light and dark mode remain legible. Other category colours are system colours below.
 - **Icons:** SF Symbols only. **Never use platform logos** (Instagram, TikTok, etc. are trademarks). Show the platform as a short text label.
 - **Spacing:** 16 pt screen margins, 12 pt grid gaps, 8 pt inside chips. Cards: corner radius 16, continuous style.
 - **Copy:** sentence case, short, friendly, no jargon ("Processing…", not "Inferencing").
@@ -23,7 +23,7 @@ One colour and one symbol per category, used everywhere: chips, card accents, fi
 
 | Case | Display name | Colour | SF Symbol |
 |---|---|---|---|
-| `design` | Design | `.purple` | `paintbrush.pointed` |
+| `design` | Design | adaptive brand blue (`AccentColor`) | `paintbrush.pointed` |
 | `foodRecipes` | Food & Recipes | `.orange` | `fork.knife` |
 | `travel` | Travel | `.teal` | `airplane` |
 | `tech` | Tech | `.blue` | `laptopcomputer` |
@@ -50,10 +50,10 @@ Optional: iOS 26 added a search tab role (`Tab(role: .search)`) that shows Ask a
 ## Screens
 
 ### 1. Library
-- Navigation title "Déjà View" (large title). Toolbar: `+` (opens Add sheet).
+- Navigation title "Library" (large title). Toolbar: `+` (opens Add sheet).
 - Unavailable banner at the top when the model is off (see Components).
-- Horizontal scrolling row of category filter chips: "All" + the 8 categories. Only show categories that have posts.
-- 2-column `LazyVGrid` of **post cards**, newest first.
+- Source and category menus filter together; a no-match state offers to clear both filters.
+- A list of saved posts, newest first, shows each category with its symbol. A trailing swipe action asks for confirmation before deletion.
 - **Empty state** (`ContentUnavailableView`): symbol `rectangle.on.rectangle`, title "Nothing saved yet", description "You've seen it before. Now you can find it again. Share a post to Déjà View or paste a link.", button "Paste a link".
 
 **Post card**
@@ -85,7 +85,7 @@ Optional: iOS 26 added a search tab role (`Tab(role: .search)`) that shows Ask a
 - Text field at the bottom (above the tab bar), placeholder "What are you looking for?", submit button `arrow.up.circle.fill`. Disabled while answering.
 
 **While answering**
-- A subtle animated glow around the answer card: an `AngularGradient` stroke (purple, blue, teal, orange, pink) rotating slowly, echoing Apple Intelligence. Respect Reduce Motion: show a static gradient instead.
+- Show a progress indicator while searching and keep the answer card calm and readable as text arrives.
 - **Tool chip** appears as soon as the tool is called: capsule with `magnifyingglass` + the label, e.g. "Searched: Design · last 7 days". `.caption`, secondary background. Animate in with `.transition(.scale.combined(with: .opacity))`.
 - **Answer card**: the streamed text in `.body`, appearing as it arrives.
 - **Results** below: the same post cards (or a compact row version), each with a "why it matched" line in `.caption` `.secondary` ("Design · 'figma' in caption"). Animate results in one by one.
@@ -119,7 +119,7 @@ Optional: iOS 26 added a search tab role (`Tab(role: .search)`) that shows Ask a
 
 ### 4. Post detail
 - Hero image full width (max height ~45% of screen), radius 0 at the top.
-- Category chip + platform label + date.
+- Platform label, date, and original link, followed by the editable category chip before AI content.
 - Summary in `.title3`.
 - Tag chips (neutral, `#tag`).
 - Primary button: "Open original" (`.borderedProminent`, symbol `arrow.up.right.square`).
@@ -161,14 +161,16 @@ Optional: iOS 26 added a search tab role (`Tab(role: .search)`) that shows Ask a
 - Minimum tap target 44×44.
 
 ## App icon
-Two rounded-square frames slightly offset (a post seen twice), the front one with a small sparkle in the corner. Purple-to-blue background. Simple enough to read at small sizes. If there's no time, use a single `rectangle.on.rectangle` symbol on a purple gradient.
+The supplied twin-cat search mark represents seeing something twice and finding it again. Use `brand/deja-view-app-icon.svg` as the source for the opaque 1024 px PNG in the iOS asset catalog. Extend the icon's background to the edges when exporting so iOS can apply its own icon mask. The in-app mark uses the primary logo.
+
+The identity palette is Déjà View Blue `#5FA1ED`, cobalt `#3B7DD8`, sky `#BED7F7`, ice `#E7F1FC`, and obsidian `#313235`. The adaptive accent uses a darker blue `#2866BB` in light mode for contrast and `#7EB8F7` in dark mode. Use blue sparingly for actions, selection, and the Design category; retain semantic system backgrounds, text, and other category colors. The voice is concise, friendly, and centered on search, finding, recall, and assistance. See `brand/brand-identity.html` for the complete identity and asset usage.
 
 ## Demo checklist (design)
 - [ ] Large text on, iPhone 17 Pro (or Pro Max simulator) for the projector.
 - [ ] Library already has the sample posts, with real thumbnails, across several categories.
-- [ ] Ask's glow and tool chip visible during the live request.
+- [ ] Ask's progress and tool chip visible during the live request.
 - [ ] The no-match empty state looks intentional.
 - [ ] Dark mode checked once.
 
 ## What to skip today
-Custom fonts, custom tab bars, onboarding screens, settings, iPad layout, app icon polish beyond the simple version.
+Custom fonts, custom tab bars, onboarding screens, settings, iPad layout, additional app icon variants.
