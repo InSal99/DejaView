@@ -18,7 +18,12 @@ enum LinkFetcher {
 
         let title = firstNonEmpty(lpResult.title, htmlResult.title)
         let caption = firstNonEmpty(htmlResult.description, lpResult.title, htmlResult.title)
-        return LinkPreview(title: title, caption: caption, imageData: lpResult.imageData)
+        // Prefer the page's og:image: LinkPresentation's image can have a play button drawn on it.
+        var imageData = lpResult.imageData
+        if let imageURL = htmlResult.imageURL, let ogData = await downloadImage(imageURL) {
+            imageData = ogData
+        }
+        return LinkPreview(title: title, caption: caption, imageData: imageData)
     }
 
     // MARK: LinkPresentation
@@ -48,7 +53,7 @@ enum LinkFetcher {
 
     // MARK: HTML backup (og:title, og:description)
 
-    private struct HTMLResult { var title = ""; var description = "" }
+    private struct HTMLResult { var title = ""; var description = ""; var imageURL: URL? }
 
     private static func fetchHTMLMeta(_ url: URL) async -> HTMLResult {
         var request = URLRequest(url: url, timeoutInterval: timeout)
@@ -59,14 +64,30 @@ enum LinkFetcher {
 
         guard let (data, _) = try? await URLSession.shared.data(for: request) else { return HTMLResult() }
         let html = String(decoding: data.prefix(512_000), as: UTF8.self)
+        let imageString = firstNonEmpty(
+            metaContent(property: "og:image", in: html),
+            metaContent(property: "og:image:url", in: html),
+            metaContent(property: "twitter:image", in: html)
+        )
         return HTMLResult(
             title: metaContent(property: "og:title", in: html),
             description: firstNonEmpty(
                 metaContent(property: "og:description", in: html),
                 metaContent(property: "twitter:description", in: html),
                 metaContent(property: "description", in: html)
-            )
+            ),
+            imageURL: imageString.isEmpty ? nil : URL(string: imageString, relativeTo: url)?.absoluteURL
         )
+    }
+
+    private static func downloadImage(_ url: URL) async -> Data? {
+        guard url.scheme == "https" || url.scheme == "http" else { return nil }
+        var request = URLRequest(url: url, timeoutInterval: timeout)
+        request.setValue("facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)", forHTTPHeaderField: "User-Agent")
+        guard let (data, response) = try? await URLSession.shared.data(for: request),
+              (response as? HTTPURLResponse)?.statusCode == 200,
+              data.count < 10_000_000 else { return nil }
+        return ImageTools.downscaledJPEG(data)
     }
 
     /// Finds `<meta property|name="X" content="…">` in either attribute order.
