@@ -3,7 +3,7 @@ import SwiftData
 
 enum SharedContainer {
     /// Must match the App Groups capability on both targets.
-    static let appGroupID = "group.com.H747JY2BA4.dejaview"
+    static let appGroupID = "group.com.934K9APAT3.dejaview"
 
     static let container: ModelContainer = {
         let configuration = ModelConfiguration(
