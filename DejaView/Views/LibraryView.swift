@@ -49,9 +49,15 @@ struct LibraryView: View {
 
                             ScrollView(.horizontal) {
                                 HStack {
-                                    Button("All") { category = nil }
-                                        .buttonStyle(.borderedProminent)
-                                        .tint(category == nil ? .accentColor : .secondary)
+                                    Button { category = nil } label: {
+                                        Text("All")
+                                            .font(.caption.weight(.semibold))
+                                            .padding(.horizontal, 14)
+                                            .padding(.vertical, 8)
+                                            .foregroundStyle(category == nil ? Color.white : Color.accentColor)
+                                            .background(category == nil ? Color.accentColor : Color.accentColor.opacity(0.15), in: Capsule())
+                                    }
+                                    .buttonStyle(.plain)
                                     ForEach(PostCategory.allCases.filter { candidate in posts.contains { $0.category == candidate } }, id: \.self) { candidate in
                                         Button { category = candidate } label: {
                                             CategoryChip(category: candidate, selected: category == candidate)

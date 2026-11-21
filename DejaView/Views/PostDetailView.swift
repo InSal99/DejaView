@@ -17,34 +17,28 @@ struct PostDetailView: View {
         post.summaryDescription.isEmpty ? post.summary : post.summaryDescription
     }
 
+    private var originalURL: URL? {
+        guard let urlString = post.urlString, let url = URL(string: urlString),
+              ["http", "https"].contains(url.scheme?.lowercased() ?? "") else { return nil }
+        return url
+    }
+
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: 0) {
                 hero
-                VStack(alignment: .leading, spacing: 16) {
-                    categoryMenu
 
-                    Text(post.displayTitle)
-                        .font(.title2.bold())
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("\(post.platform.displayName) · \(post.savedAt.staticSaved)")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                        if let urlString = post.urlString, let url = URL(string: urlString), ["http", "https"].contains(url.scheme?.lowercased() ?? "") {
-                            Link(destination: url) { Label("Open original", systemImage: "arrow.up.right.square") }
-                        }
-                    }
-
+                VStack(alignment: .leading, spacing: 24) {
+                    header
                     summaryCard
-                    noteButton
                     keyPoints
                     tagChips
-
                     readSection
-                    if let errorMessage { Text(errorMessage).foregroundStyle(.red) }
+                    if let errorMessage { Text(errorMessage).font(.footnote).foregroundStyle(.red) }
                 }
                 .padding(.horizontal, 16)
-                .padding(.bottom, 24)
+                .padding(.top, 20)
+                .padding(.bottom, 32)
             }
         }
         .dismissKeyboardOnTap()
@@ -103,53 +97,77 @@ struct PostDetailView: View {
         }
     }
 
-    @ViewBuilder
-    private var summaryCard: some View {
-        if post.status == .pending || !description.isEmpty || !post.userNote.isEmpty {
-            VStack(alignment: .leading, spacing: 12) {
-                if post.status == .pending || !description.isEmpty {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Label("AI Summary", systemImage: "sparkles")
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(.tint)
-                        Text(post.status == .pending ? "Processing…" : description)
-                            .font(.body)
-                    }
-                }
-                if !post.userNote.isEmpty {
-                    if post.status == .pending || !description.isEmpty { Divider() }
-                    VStack(alignment: .leading, spacing: 8) {
-                        Label("Your note", systemImage: "note.text")
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(.secondary)
-                        Text(post.userNote)
-                            .font(.body)
-                            .textSelection(.enabled)
-                    }
-                }
+    /// Category, title, one meta line, one quiet action.
+    private var header: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                categoryMenu
+                Spacer()
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(14)
-            .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            Text(post.displayTitle)
+                .font(.title2.bold())
+            Text("\(post.platform.displayName) · \(post.savedAt.staticSaved)")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+            if let originalURL {
+                Link(destination: originalURL) {
+                    Label("Open original", systemImage: "arrow.up.right.square")
+                }
+                .buttonStyle(.bordered)
+                .buttonBorderShape(.capsule)
+                .controlSize(.small)
+                .padding(.top, 4)
+            }
         }
     }
 
-    private var noteButton: some View {
-        Button(post.userNote.isEmpty ? "Add note" : "Edit note", systemImage: post.userNote.isEmpty ? "plus" : "pencil") {
-            note = post.userNote
-            showingNote = true
+    /// The summary and the user's own note share one card, with a single note action at the bottom.
+    private var summaryCard: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            if post.status == .pending || !description.isEmpty {
+                VStack(alignment: .leading, spacing: 8) {
+                    Label("AI Summary", systemImage: "sparkles")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.tint)
+                    Text(post.status == .pending ? "Processing…" : description)
+                        .font(.body)
+                }
+            }
+            if !post.userNote.isEmpty {
+                if post.status == .pending || !description.isEmpty { Divider() }
+                VStack(alignment: .leading, spacing: 8) {
+                    Label("Your note", systemImage: "note.text")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                    Text(post.userNote)
+                        .font(.body)
+                        .textSelection(.enabled)
+                }
+            }
+            Button(post.userNote.isEmpty ? "Add note" : "Edit note", systemImage: post.userNote.isEmpty ? "plus" : "pencil") {
+                note = post.userNote
+                showingNote = true
+            }
+            .font(.subheadline)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 
     @ViewBuilder
     private var keyPoints: some View {
         if !post.keyPoints.isEmpty {
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: 10) {
                 Text("Key Points").font(.headline)
                 ForEach(post.keyPoints, id: \.self) { point in
-                    HStack(alignment: .firstTextBaseline, spacing: 8) {
-                        Text("•")
-                        Text(point)
+                    HStack(alignment: .firstTextBaseline, spacing: 10) {
+                        Image(systemName: "circle.fill")
+                            .font(.system(.caption2))
+                            .imageScale(.small)
+                            .foregroundStyle(.secondary)
+                            .accessibilityHidden(true)
+                        Text(point).font(.body)
                     }
                 }
             }
@@ -225,7 +243,8 @@ struct PostDetailView: View {
             .padding(.top, 8)
         } label: {
             Label("What Déjà View read", systemImage: "eye")
-                .font(.subheadline.weight(.semibold))
+                .font(.subheadline.weight(.medium))
+                .foregroundStyle(.primary)
         }
     }
 

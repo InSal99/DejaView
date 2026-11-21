@@ -20,16 +20,18 @@ struct PostCardView: View {
                 }
             }
             .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: 6) {
                 Text(post.status == .pending ? "Processing…" : post.displayTitle)
-                    .font(.subheadline)
+                    .font(.subheadline.weight(.semibold))
                     .foregroundStyle(post.status == .pending ? .secondary : .primary)
                     .lineLimit(2)
+                    .frame(maxWidth: .infinity, minHeight: 36, alignment: .topLeading)
+                Text("\(post.platform.displayName) · \(post.savedAt.staticAgo)")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .padding(.bottom, 2)
                 CategoryChip(category: post.category)
-                Text(post.savedAt.staticAgo)
-                    .font(.caption2).foregroundStyle(.secondary)
-                Text(post.platform.displayName)
-                    .font(.caption2).foregroundStyle(.secondary)
             }
             .padding([.horizontal, .bottom], 12)
         }
