@@ -87,7 +87,7 @@ struct AskView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.vertical, 12)
                             .padding(.horizontal, 14)
-                            .background(Color.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                            .surface(in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                     }
                     .buttonStyle(.plain)
                     .disabled(service.isResponding)
@@ -104,7 +104,7 @@ struct AskView: View {
                 Label(service.label, systemImage: "magnifyingglass")
                     .font(.caption)
                     .padding(10)
-                    .background(.quaternary, in: Capsule())
+                    .surface(in: Capsule())
             }
             if service.isResponding && service.answerText.isEmpty {
                 ProgressView("Searching…")
@@ -118,7 +118,7 @@ struct AskView: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
-                .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 16))
+                .surface(in: RoundedRectangle(cornerRadius: 16, style: .continuous))
             }
             if let note = service.relaxedNote { Text(note).font(.footnote).foregroundStyle(.secondary) }
             if let error = service.errorMessage { Text(error).font(.footnote).foregroundStyle(.secondary) }
@@ -166,7 +166,7 @@ struct AskView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 14)
-        .background(.regularMaterial, in: Capsule())
+        .background(Color(.secondarySystemBackground), in: Capsule())
         .padding(.horizontal, 16)
         .padding(.bottom, 8)
     }

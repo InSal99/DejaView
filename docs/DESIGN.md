@@ -13,7 +13,7 @@ Read with `SPEC.md`. This file says how the app looks and feels; `SPEC.md` says 
 ## Rules
 - **Components:** `NavigationStack`, `TabView`, `LazyVGrid`, `List`, `.sheet`, `.searchable` / `TextField`, `ContentUnavailableView` for empty states, `PhotosPicker`.
 - **Type:** system font with text styles only (`.largeTitle`, `.title2`, `.headline`, `.body`, `.subheadline`, `.caption`). No fixed point sizes.
-- **Colour:** use the adaptive AccentColor asset for actions and the Design category, with semantic system surfaces and text so light and dark mode remain legible. Other category colours are system colours below.
+- **Colour:** system colours only. The accent is the default system blue (the empty `AccentColor` asset), with semantic system surfaces and text so light and dark mode stay legible. Category colours are the system colours below.
 - **Icons:** SF Symbols only. **Never use platform logos** (Instagram, TikTok, etc. are trademarks). Show the platform as a short text label.
 - **Spacing:** 16 pt screen margins, 12 pt grid gaps, 8 pt inside chips. Cards: corner radius 16, continuous style.
 - **Copy:** sentence case, short, friendly, no jargon ("Processing…", not "Inferencing").
@@ -23,7 +23,7 @@ One colour and one symbol per category, used everywhere: chips, card accents, fi
 
 | Case | Display name | Colour | SF Symbol |
 |---|---|---|---|
-| `design` | Design | adaptive brand blue (`AccentColor`) | `paintbrush.pointed` |
+| `design` | Design | `.purple` | `paintbrush.pointed` |
 | `foodRecipes` | Food & Recipes | `.orange` | `fork.knife` |
 | `travel` | Travel | `.teal` | `airplane` |
 | `tech` | Tech | `.blue` | `laptopcomputer` |
@@ -163,7 +163,7 @@ Optional: iOS 26 added a search tab role (`Tab(role: .search)`) that shows Ask a
 ## App icon
 The supplied twin-cat search mark represents seeing something twice and finding it again. Use `brand/deja-view-app-icon.svg` as the source for the opaque 1024 px PNG in the iOS asset catalog. Extend the icon's background to the edges when exporting so iOS can apply its own icon mask. The in-app mark uses the primary logo.
 
-The identity palette is Déjà View Blue `#5FA1ED`, cobalt `#3B7DD8`, sky `#BED7F7`, ice `#E7F1FC`, and obsidian `#313235`. The adaptive accent uses a darker blue `#2866BB` in light mode for contrast and `#7EB8F7` in dark mode. Use blue sparingly for actions, selection, and the Design category; retain semantic system backgrounds, text, and other category colors. The voice is concise, friendly, and centered on search, finding, recall, and assistance. See `brand/brand-identity.html` for the complete identity and asset usage.
+The identity blue is Apple's system blue: `#007AFF` in light mode and `#0A84FF` in dark mode (the app's default accent, so no custom colour asset). Supporting tints are sky `#B3D7FF` and ice `#EBF4FF`, with obsidian `#313235` for the cats. Use blue for actions and selection; retain semantic system backgrounds, text, and category colors (Design is purple). The voice is concise, friendly, and centered on search, finding, recall, and assistance. See `brand/brand-identity.html` for the complete identity and asset usage.
 
 ## Demo checklist (design)
 - [ ] Large text on, iPhone 17 Pro (or Pro Max simulator) for the projector.

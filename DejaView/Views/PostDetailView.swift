@@ -9,7 +9,7 @@ struct PostDetailView: View {
     @State private var showingDelete = false
     @State private var showingFullImage = false
     @State private var showingRefine = false
-    @State private var showNote = false
+    @State private var showingNote = false
     @State private var note = ""
     @State private var errorMessage: String?
 
@@ -17,52 +17,34 @@ struct PostDetailView: View {
         post.summaryDescription.isEmpty ? post.summary : post.summaryDescription
     }
 
+    private var originalURL: URL? {
+        guard let urlString = post.urlString, let url = URL(string: urlString),
+              ["http", "https"].contains(url.scheme?.lowercased() ?? "") else { return nil }
+        return url
+    }
+
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: 0) {
                 hero
-                VStack(alignment: .leading, spacing: 16) {
-                    Text(post.displayTitle)
-                        .font(.title2.bold())
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("\(post.platform.displayName) · \(post.savedAt.staticSaved)")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                        if let urlString = post.urlString, let url = URL(string: urlString), ["http", "https"].contains(url.scheme?.lowercased() ?? "") {
-                            Link(destination: url) { Label("Open original", systemImage: "arrow.up.right.square") }
-                        }
-                    }
 
-                    categoryMenu
-
+                VStack(alignment: .leading, spacing: 24) {
+                    header
                     summaryCard
                     keyPoints
                     tagChips
-
-                    noteSection
-
-                    DisclosureGroup("What Déjà View read") {
-                        VStack(alignment: .leading, spacing: 12) {
-                            if !post.caption.isEmpty { Text(post.caption) }
-                            if !post.ocrText.isEmpty { Text(post.ocrText) }
-                            if !post.englishText.isEmpty { Text(post.englishText) }
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.top, 8)
-                    }
-                    if let errorMessage { Text(errorMessage).foregroundStyle(.red) }
+                    readSection
+                    if let errorMessage { Text(errorMessage).font(.footnote).foregroundStyle(.red) }
                 }
                 .padding(.horizontal, 16)
-                .padding(.bottom, 24)
+                .padding(.top, 20)
+                .padding(.bottom, 32)
             }
         }
         .dismissKeyboardOnTap()
         .navigationTitle("Post")
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear {
-            note = post.userNote
-            showNote = !post.userNote.isEmpty
-        }
+        .onAppear { note = post.userNote }
         .toolbar {
             Menu("Post options", systemImage: "ellipsis.circle") {
                 Button("Refine with AI", systemImage: "wand.and.stars") { showingRefine = true }
@@ -83,6 +65,13 @@ struct PostDetailView: View {
             }
         }
         .sheet(isPresented: $showingRefine) { RefineSheet(post: post) }
+        .sheet(isPresented: $showingNote) {
+            NoteSheet(note: $note) { newNote in
+                post.userNote = newNote
+                note = newNote
+                if newNote.isEmpty { save() } else { markReviewed() }
+            }
+        }
         .fullScreenCover(isPresented: $showingFullImage) {
             if let data = post.imageData { FullImageView(imageData: data) }
         }
@@ -108,31 +97,77 @@ struct PostDetailView: View {
         }
     }
 
-    @ViewBuilder
-    private var summaryCard: some View {
-        if post.status == .pending || !description.isEmpty {
-            VStack(alignment: .leading, spacing: 8) {
-                Label("AI Summary", systemImage: "sparkles")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.tint)
-                Text(post.status == .pending ? "Processing…" : description)
-                    .font(.body)
+    /// Category, title, one meta line, one quiet action.
+    private var header: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                categoryMenu
+                Spacer()
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(14)
-            .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            Text(post.displayTitle)
+                .font(.title2.bold())
+            Text("\(post.platform.displayName) · \(post.savedAt.staticSaved)")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+            if let originalURL {
+                Link(destination: originalURL) {
+                    Label("Open original", systemImage: "arrow.up.right.square")
+                }
+                .buttonStyle(.bordered)
+                .buttonBorderShape(.capsule)
+                .controlSize(.small)
+                .padding(.top, 4)
+            }
         }
+    }
+
+    /// The summary and the user's own note share one card, with a single note action at the bottom.
+    private var summaryCard: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            if post.status == .pending || !description.isEmpty {
+                VStack(alignment: .leading, spacing: 8) {
+                    Label("AI Summary", systemImage: "sparkles")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.tint)
+                    Text(post.status == .pending ? "Processing…" : description)
+                        .font(.body)
+                }
+            }
+            if !post.userNote.isEmpty {
+                if post.status == .pending || !description.isEmpty { Divider() }
+                VStack(alignment: .leading, spacing: 8) {
+                    Label("Your note", systemImage: "note.text")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                    Text(post.userNote)
+                        .font(.body)
+                        .textSelection(.enabled)
+                }
+            }
+            Button(post.userNote.isEmpty ? "Add note" : "Edit note", systemImage: post.userNote.isEmpty ? "plus" : "pencil") {
+                note = post.userNote
+                showingNote = true
+            }
+            .font(.subheadline)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .surface(in: RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 
     @ViewBuilder
     private var keyPoints: some View {
         if !post.keyPoints.isEmpty {
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: 10) {
                 Text("Key Points").font(.headline)
                 ForEach(post.keyPoints, id: \.self) { point in
-                    HStack(alignment: .firstTextBaseline, spacing: 8) {
-                        Text("•")
-                        Text(point)
+                    HStack(alignment: .firstTextBaseline, spacing: 10) {
+                        Image(systemName: "circle.fill")
+                            .font(.system(.caption2))
+                            .imageScale(.small)
+                            .foregroundStyle(.secondary)
+                            .accessibilityHidden(true)
+                        Text(point).font(.body)
                     }
                 }
             }
@@ -149,7 +184,7 @@ struct PostDetailView: View {
                             .font(.caption)
                             .padding(.horizontal, 10)
                             .padding(.vertical, 6)
-                            .background(.quaternary, in: Capsule())
+                            .surface(in: Capsule())
                     }
                 }
             }
@@ -174,21 +209,57 @@ struct PostDetailView: View {
         .onChange(of: post.category) { _, _ in markReviewed() }
     }
 
+    private var languageName: String? {
+        guard !post.detectedLanguage.isEmpty else { return nil }
+        return Locale.current.localizedString(forLanguageCode: post.detectedLanguage)
+    }
+
     @ViewBuilder
-    private var noteSection: some View {
-        if showNote {
-            VStack(alignment: .leading, spacing: 8) {
-                TextField("Add a note…", text: $note, axis: .vertical)
-                    .textFieldStyle(.roundedBorder)
-                Button("Save note") {
-                    post.userNote = note.trimmingCharacters(in: .whitespacesAndNewlines)
-                    if !post.userNote.isEmpty { markReviewed() } else { save() }
+    private var readSection: some View {
+        let hasContent = !post.caption.isEmpty || !post.ocrText.isEmpty || !post.englishText.isEmpty
+        DisclosureGroup {
+            VStack(alignment: .leading, spacing: 16) {
+                if !hasContent {
+                    Text("Nothing was read from this post.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
                 }
-                .disabled(note == post.userNote)
+                if !post.caption.isEmpty {
+                    readBlock("Caption", systemImage: "text.bubble", text: post.caption)
+                }
+                if !post.ocrText.isEmpty {
+                    readBlock("Text in the image", systemImage: "text.viewfinder", text: post.ocrText)
+                }
+                if !post.englishText.isEmpty {
+                    readBlock("English translation", systemImage: "character.bubble", text: post.englishText)
+                }
+                if let languageName {
+                    Label("Language: \(languageName)", systemImage: "globe")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
             }
-        } else {
-            Button("Add note", systemImage: "plus") { showNote = true }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.top, 8)
+        } label: {
+            Label("What Déjà View read", systemImage: "eye")
+                .font(.subheadline.weight(.medium))
+                .foregroundStyle(.primary)
         }
+    }
+
+    private func readBlock(_ title: String, systemImage: String, text: String) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Label(title, systemImage: systemImage)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+            Text(text)
+                .font(.subheadline)
+                .textSelection(.enabled)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
+        .surface(in: RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 
     // MARK: Saving

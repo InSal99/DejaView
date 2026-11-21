@@ -2,12 +2,12 @@
   <defs>
     <linearGradient id="dv-icon-bg" x1="512" y1="0" x2="512" y2="1024" gradientUnits="userSpaceOnUse">
       <stop offset="0%" stop-color="#FCFDFF" />
-      <stop offset="100%" stop-color="#E7F1FC" />
+      <stop offset="100%" stop-color="#EBF4FF" />
     </linearGradient>
     <linearGradient id="dv-lens-grad" x1="120" y1="20" x2="340" y2="395" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#B9D5F7" />
-      <stop offset="48%" stop-color="#87B5EE" />
-      <stop offset="100%" stop-color="#5B9CEB" />
+      <stop offset="0%" stop-color="#B3D7FF" />
+      <stop offset="48%" stop-color="#5CA3FF" />
+      <stop offset="100%" stop-color="#007AFF" />
     </linearGradient>
     <linearGradient id="dv-back-cat" x1="210" y1="104" x2="290" y2="355" gradientUnits="userSpaceOnUse">
       <stop offset="0%" stop-color="#565A5E" />
