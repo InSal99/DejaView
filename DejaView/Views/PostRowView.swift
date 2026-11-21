@@ -50,9 +50,13 @@ struct PostRowView: View {
                     .font(.headline)
                     .foregroundStyle(post.status == .pending ? .secondary : .primary)
                     .lineLimit(2)
-                Text("\(post.platform.displayName) · \(post.savedAt.staticAgo)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                HStack(spacing: 12) {
+                    Label(post.platform.displayName, systemImage: post.platform.symbol)
+                    Label(post.savedAt.staticAgo, systemImage: "calendar")
+                }
+                .lineLimit(1)
+                .font(.caption)
+                .foregroundStyle(.secondary)
                 if showsCategory {
                     Label {
                         Text(post.category.displayName).foregroundStyle(.secondary)
@@ -81,7 +85,7 @@ struct PostRowView: View {
                     Button("Open original", systemImage: "arrow.up.right.square") { openURL(originalURL) }
                 } label: {
                     Image(systemName: "ellipsis")
-                        .frame(width: 36, height: 36)
+                        .frame(width: 44, height: 44)
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.borderless)

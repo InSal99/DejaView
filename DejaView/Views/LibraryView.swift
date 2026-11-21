@@ -9,6 +9,7 @@ struct LibraryView: View {
     @State private var showingAddLink = false
     @State private var postToDelete: SavedPost?
     @State private var errorMessage: String?
+    @State private var searchText = ""
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     enum SourceFilter: String, CaseIterable, Identifiable {
@@ -25,7 +26,15 @@ struct LibraryView: View {
     }
 
     private var filteredPosts: [SavedPost] {
-        posts.filter { source.includes($0.sourceKind) && (category == nil || $0.category == category) }
+        var base = posts.filter { source.includes($0.sourceKind) && (category == nil || $0.category == category) }
+        let words = SearchEngine.keywords(fromRaw: searchText)
+        if !words.isEmpty {
+            // Library search keeps every match, not just the top 20 used by Ask.
+            let byID = Dictionary(uniqueKeysWithValues: base.map { ($0.id, $0) })
+            let ranked = SearchEngine.search(SearchQuery(keywords: words), in: base, limit: .max).results.map(\.post.id)
+            base = ranked.compactMap { byID[$0] }
+        }
+        return base
     }
 
     var body: some View {
@@ -42,27 +51,19 @@ struct LibraryView: View {
                 } else {
                     ScrollView {
                         VStack(alignment: .leading, spacing: 16) {
-                            Picker("Source", selection: $source) {
-                                ForEach(SourceFilter.allCases) { Text($0.rawValue).tag($0) }
-                            }
-                            .pickerStyle(.segmented)
-
                             ScrollView(.horizontal) {
-                                HStack {
-                                    Button { category = nil } label: {
-                                        Text("All")
-                                            .font(.caption.weight(.semibold))
-                                            .padding(.horizontal, 14)
-                                            .padding(.vertical, 8)
+                                HStack(spacing: 8) {
+                                    sourceMenu
+                                    filterChip(selected: category == nil) { category = nil } label: {
+                                        Text("All").font(.caption.weight(.semibold))
+                                            .padding(.horizontal, 14).padding(.vertical, 8)
                                             .foregroundStyle(category == nil ? Color.white : Color.accentColor)
                                             .background(category == nil ? Color.accentColor : Color.accentColor.opacity(0.15), in: Capsule())
                                     }
-                                    .buttonStyle(.plain)
                                     ForEach(PostCategory.allCases.filter { candidate in posts.contains { $0.category == candidate } }, id: \.self) { candidate in
-                                        Button { category = candidate } label: {
+                                        filterChip(selected: category == candidate) { category = candidate } label: {
                                             CategoryChip(category: candidate, selected: category == candidate)
                                         }
-                                        .buttonStyle(.plain)
                                     }
                                 }
                             }
@@ -74,7 +75,7 @@ struct LibraryView: View {
                                 } description: {
                                     Text("Try a different source or category.")
                                 } actions: {
-                                    Button("Clear filters") { source = .all; category = nil }
+                                    Button("Clear filters") { source = .all; category = nil; searchText = "" }
                                 }
                             } else {
                                 LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: dynamicTypeSize.isAccessibilitySize ? 1 : 2), spacing: 12) {
@@ -99,6 +100,7 @@ struct LibraryView: View {
                 }
             }
             .navigationTitle("Library")
+            .searchable(text: $searchText, prompt: "Search your library")
             .safeAreaInset(edge: .top) {
                 if let reason = AskService.unavailableReason {
                     ModelUnavailableBanner(reason: reason)
@@ -123,6 +125,33 @@ struct LibraryView: View {
                 }
             }
         }
+    }
+
+    /// Source filter as a chip with a menu, so there is one filter row.
+    private var sourceMenu: some View {
+        Menu {
+            Picker("Source", selection: $source) {
+                ForEach(SourceFilter.allCases) { Text($0.rawValue).tag($0) }
+            }
+        } label: {
+            Label(source == .all ? "All sources" : source.rawValue, systemImage: "line.3.horizontal.decrease")
+                .font(.caption.weight(.semibold))
+                .padding(.horizontal, 12).padding(.vertical, 8)
+                .foregroundStyle(source == .all ? Color.primary : Color.white)
+                .background(source == .all ? Color(.secondarySystemBackground) : Color.accentColor, in: Capsule())
+                .frame(minHeight: 44)
+                .contentShape(Rectangle())
+        }
+        .accessibilityLabel("Source: \(source.rawValue)")
+    }
+
+    /// A tappable chip with a 44 pt target; the visible chip keeps its size.
+    private func filterChip<Label: View>(selected: Bool, action: @escaping () -> Void, @ViewBuilder label: () -> Label) -> some View {
+        Button(action: action) {
+            label().frame(minHeight: 44).contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(selected ? .isSelected : [])
     }
 
     private func originalURL(for post: SavedPost) -> URL? {

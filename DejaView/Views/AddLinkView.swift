@@ -27,7 +27,7 @@ struct AddLinkView: View {
                         .submitLabel(.done)
                         .onSubmit(saveLink)
                         .onChange(of: linkText) { _, _ in errorMessage = nil }
-                        .listRowBackground(SurfaceRowBackground())
+                        .listRowBackground(Color(.secondarySystemBackground))
                 } footer: {
                     if let errorMessage {
                         Text(errorMessage)
@@ -41,7 +41,7 @@ struct AddLinkView: View {
                         Label("Pick a screenshot", systemImage: "photo.on.rectangle")
                     }
                     .disabled(isLoadingImage)
-                    .listRowBackground(SurfaceRowBackground())
+                    .listRowBackground(Color(.secondarySystemBackground))
 
                     if UIImagePickerController.isSourceTypeAvailable(.camera) {
                         Button {
@@ -50,7 +50,7 @@ struct AddLinkView: View {
                             Label("Take a photo", systemImage: "camera")
                         }
                         .disabled(isLoadingImage)
-                        .listRowBackground(SurfaceRowBackground())
+                        .listRowBackground(Color(.secondarySystemBackground))
                     }
                 }
             }

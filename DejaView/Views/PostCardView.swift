@@ -14,8 +14,12 @@ struct PostCardView: View {
                     .aspectRatio(4 / 5, contentMode: .fit)
                     .clipped()
                 if post.status == .needsReview {
-                    Image(systemName: "exclamationmark.circle.fill")
-                        .foregroundStyle(.yellow, .background)
+                    Label("Needs review", systemImage: "exclamationmark.circle.fill")
+                        .font(.caption2.weight(.semibold))
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(.yellow, in: Capsule())
+                        .foregroundStyle(.black)
                         .padding(8)
                 }
             }
@@ -24,13 +28,17 @@ struct PostCardView: View {
                 Text(post.status == .pending ? "Processing…" : post.displayTitle)
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(post.status == .pending ? .secondary : .primary)
-                    .lineLimit(2)
-                    .frame(maxWidth: .infinity, minHeight: 36, alignment: .topLeading)
-                Text("\(post.platform.displayName) · \(post.savedAt.staticAgo)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
-                    .padding(.bottom, 2)
+                    .lineLimit(2, reservesSpace: true)
+                    .frame(maxWidth: .infinity, alignment: .topLeading)
+                HStack(spacing: 8) {
+                    Text(post.platform.displayName)
+                    Spacer(minLength: 4)
+                    Text(post.savedAt.staticAgo)
+                }
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+                .padding(.bottom, 2)
                 CategoryChip(category: post.category)
             }
             .padding([.horizontal, .bottom], 12)
@@ -41,6 +49,7 @@ struct PostCardView: View {
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(post.displayTitle), \(post.category.displayName), \(post.platform.displayName), \(post.savedAt.formatted(date: .abbreviated, time: .omitted))\(post.status == .needsReview ? ", Needs review" : "")")
         .animation(reduceMotion ? nil : .smooth, value: post.statusRaw)
+        .sensoryFeedback(.success, trigger: post.status == .processed)
     }
 }
 
@@ -59,6 +68,7 @@ struct PostImage: View {
             } else {
                 Image(systemName: post.status == .pending ? "sparkles" : post.category.symbol)
                     .font(.largeTitle).foregroundStyle(post.category.color)
+                    .symbolEffect(.pulse, isActive: post.status == .pending)
             }
             #else
             Image(systemName: post.category.symbol).font(.largeTitle).foregroundStyle(post.category.color)

@@ -69,7 +69,7 @@ final class LibrarySearch {
         }
         if arguments.platform != .any { parts.append(arguments.platform.rawValue) }
         if !words.isEmpty { parts.append(words.joined(separator: ", ")) }
-        label = "Searched: " + (parts.isEmpty ? "all posts" : parts.joined(separator: " · "))
+        label = "Searched: " + (parts.isEmpty ? "all posts" : parts.joined(separator: ", "))
 
         guard !results.isEmpty else { return "No saved posts matched. Nothing was found." }
         let descriptions = results.prefix(5).enumerated().map { index, result in

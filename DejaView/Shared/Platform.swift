@@ -19,6 +19,15 @@ enum Platform: String, Codable, CaseIterable {
         return .web
     }
 
+    /// SF Symbol for the kind of source. Never a platform logo.
+    var symbol: String {
+        switch self {
+        case .screenshot: "photo"
+        case .web: "globe"
+        default: "text.bubble"
+        }
+    }
+
     var displayName: String {
         switch self {
         case .instagram: "Instagram"

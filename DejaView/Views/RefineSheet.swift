@@ -22,7 +22,7 @@ struct RefineSheet: View {
                     TextField("e.g. Focus on the ingredients", text: $instruction, axis: .vertical)
                         .lineLimit(1...4)
                         .focused($focused)
-                        .listRowBackground(SurfaceRowBackground())
+                        .listRowBackground(Color(.secondarySystemBackground))
                 } header: {
                     Text("What should change?")
                 } footer: {
@@ -44,7 +44,7 @@ struct RefineSheet: View {
                     }
                     .scrollIndicators(.hidden)
                     .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
-                    .listRowBackground(SurfaceRowBackground())
+                    .listRowBackground(Color(.secondarySystemBackground))
                 }
             }
             .surfaceForm()

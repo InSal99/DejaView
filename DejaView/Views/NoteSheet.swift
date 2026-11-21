@@ -15,7 +15,7 @@ struct NoteSheet: View {
                     TextField("Add a note…", text: $draft, axis: .vertical)
                         .lineLimit(3...8)
                         .focused($focused)
-                        .listRowBackground(SurfaceRowBackground())
+                        .listRowBackground(Color(.secondarySystemBackground))
                 } footer: {
                     Text("Notes are saved on this device and are used when you search.")
                 }
