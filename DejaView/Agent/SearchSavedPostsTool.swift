@@ -15,7 +15,7 @@ struct SearchSavedPostsTool: Tool {
         var dateRange: DateRangeOption
         @Guide(description: "Platform only if the user names one, otherwise any")
         var platform: PlatformFilter
-        @Guide(description: "Up to 5 topic words from the request", .maximumCount(5))
+        @Guide(description: "Topic words from the request plus a few closely related words, e.g. room → interior, furniture, layout", .maximumCount(8))
         var keywords: [String]
     }
 
@@ -43,14 +43,15 @@ final class LibrarySearch {
         var words: [String] = []
         let questionWords = SearchEngine.keywords(fromRaw: question).filter { word in
             posts.contains { post in
-                post.caption.lowercased().split { !$0.isLetter && !$0.isNumber }
+                [post.caption, post.title, post.summaryDescription, post.tags.joined(separator: " ")]
+                    .joined(separator: " ").lowercased().split { !$0.isLetter && !$0.isNumber }
                     .contains { $0.hasPrefix(word) }
             }
         }
         let rawWords = arguments.keywords.flatMap { SearchEngine.keywords(fromRaw: $0) } + questionWords
         for word in rawWords where !words.contains(word) {
             words.append(word)
-            if words.count == 5 { break }
+            if words.count == SearchEngine.maxKeywords { break }
         }
         let query = SearchQuery(category: arguments.category, dateRange: arguments.dateRange, platform: arguments.platform, keywords: words)
         let search = SearchEngine.search(query, in: posts)
@@ -73,8 +74,9 @@ final class LibrarySearch {
         guard !results.isEmpty else { return "No saved posts matched. Nothing was found." }
         let descriptions = results.prefix(5).enumerated().map { index, result in
             let post = result.post
-            let text = post.summary.isEmpty ? post.caption : post.summary
-            return "\(index + 1)) \(String(text.prefix(180))) (\(post.category.displayName), \(post.platform.displayName))."
+            let detail = post.summaryDescription.isEmpty ? (post.summary.isEmpty ? post.caption : post.summary) : post.summaryDescription
+            let text = post.title.isEmpty ? detail : "\(post.title): \(detail)"
+            return "\(index + 1)) \(String(text.prefix(220))) (\(post.category.displayName), \(post.platform.displayName))."
         }.joined(separator: " ")
         let prefix = relaxedNote.map { "No posts matched all filters. \($0) " } ?? ""
         return "\(prefix)Found \(results.count) saved posts: \(descriptions) Only describe these posts."

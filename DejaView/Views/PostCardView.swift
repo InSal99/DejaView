@@ -26,7 +26,7 @@ struct PostCardView: View {
                     .foregroundStyle(post.summary.isEmpty ? .secondary : .primary)
                     .lineLimit(2)
                 CategoryChip(category: post.category)
-                Text(post.savedAt, style: .relative)
+                Text(post.savedAt.staticAgo)
                     .font(.caption2).foregroundStyle(.secondary)
                 Text(post.platform.displayName)
                     .font(.caption2).foregroundStyle(.secondary)
