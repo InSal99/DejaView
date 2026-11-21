@@ -9,7 +9,7 @@ struct PostDetailView: View {
     @State private var showingDelete = false
     @State private var showingFullImage = false
     @State private var showingRefine = false
-    @State private var showNote = false
+    @State private var showingNote = false
     @State private var note = ""
     @State private var errorMessage: String?
 
@@ -22,6 +22,8 @@ struct PostDetailView: View {
             VStack(alignment: .leading, spacing: 16) {
                 hero
                 VStack(alignment: .leading, spacing: 16) {
+                    categoryMenu
+
                     Text(post.displayTitle)
                         .font(.title2.bold())
                     VStack(alignment: .leading, spacing: 6) {
@@ -33,23 +35,12 @@ struct PostDetailView: View {
                         }
                     }
 
-                    categoryMenu
-
                     summaryCard
+                    noteButton
                     keyPoints
                     tagChips
 
-                    noteSection
-
-                    DisclosureGroup("What Déjà View read") {
-                        VStack(alignment: .leading, spacing: 12) {
-                            if !post.caption.isEmpty { Text(post.caption) }
-                            if !post.ocrText.isEmpty { Text(post.ocrText) }
-                            if !post.englishText.isEmpty { Text(post.englishText) }
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.top, 8)
-                    }
+                    readSection
                     if let errorMessage { Text(errorMessage).foregroundStyle(.red) }
                 }
                 .padding(.horizontal, 16)
@@ -59,10 +50,7 @@ struct PostDetailView: View {
         .dismissKeyboardOnTap()
         .navigationTitle("Post")
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear {
-            note = post.userNote
-            showNote = !post.userNote.isEmpty
-        }
+        .onAppear { note = post.userNote }
         .toolbar {
             Menu("Post options", systemImage: "ellipsis.circle") {
                 Button("Refine with AI", systemImage: "wand.and.stars") { showingRefine = true }
@@ -83,6 +71,13 @@ struct PostDetailView: View {
             }
         }
         .sheet(isPresented: $showingRefine) { RefineSheet(post: post) }
+        .sheet(isPresented: $showingNote) {
+            NoteSheet(note: $note) { newNote in
+                post.userNote = newNote
+                note = newNote
+                if newNote.isEmpty { save() } else { markReviewed() }
+            }
+        }
         .fullScreenCover(isPresented: $showingFullImage) {
             if let data = post.imageData { FullImageView(imageData: data) }
         }
@@ -110,17 +105,39 @@ struct PostDetailView: View {
 
     @ViewBuilder
     private var summaryCard: some View {
-        if post.status == .pending || !description.isEmpty {
-            VStack(alignment: .leading, spacing: 8) {
-                Label("AI Summary", systemImage: "sparkles")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.tint)
-                Text(post.status == .pending ? "Processing…" : description)
-                    .font(.body)
+        if post.status == .pending || !description.isEmpty || !post.userNote.isEmpty {
+            VStack(alignment: .leading, spacing: 12) {
+                if post.status == .pending || !description.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Label("AI Summary", systemImage: "sparkles")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(.tint)
+                        Text(post.status == .pending ? "Processing…" : description)
+                            .font(.body)
+                    }
+                }
+                if !post.userNote.isEmpty {
+                    if post.status == .pending || !description.isEmpty { Divider() }
+                    VStack(alignment: .leading, spacing: 8) {
+                        Label("Your note", systemImage: "note.text")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                        Text(post.userNote)
+                            .font(.body)
+                            .textSelection(.enabled)
+                    }
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(14)
-            .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        }
+    }
+
+    private var noteButton: some View {
+        Button(post.userNote.isEmpty ? "Add note" : "Edit note", systemImage: post.userNote.isEmpty ? "plus" : "pencil") {
+            note = post.userNote
+            showingNote = true
         }
     }
 
@@ -174,21 +191,56 @@ struct PostDetailView: View {
         .onChange(of: post.category) { _, _ in markReviewed() }
     }
 
+    private var languageName: String? {
+        guard !post.detectedLanguage.isEmpty else { return nil }
+        return Locale.current.localizedString(forLanguageCode: post.detectedLanguage)
+    }
+
     @ViewBuilder
-    private var noteSection: some View {
-        if showNote {
-            VStack(alignment: .leading, spacing: 8) {
-                TextField("Add a note…", text: $note, axis: .vertical)
-                    .textFieldStyle(.roundedBorder)
-                Button("Save note") {
-                    post.userNote = note.trimmingCharacters(in: .whitespacesAndNewlines)
-                    if !post.userNote.isEmpty { markReviewed() } else { save() }
+    private var readSection: some View {
+        let hasContent = !post.caption.isEmpty || !post.ocrText.isEmpty || !post.englishText.isEmpty
+        DisclosureGroup {
+            VStack(alignment: .leading, spacing: 16) {
+                if !hasContent {
+                    Text("Nothing was read from this post.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
                 }
-                .disabled(note == post.userNote)
+                if !post.caption.isEmpty {
+                    readBlock("Caption", systemImage: "text.bubble", text: post.caption)
+                }
+                if !post.ocrText.isEmpty {
+                    readBlock("Text in the image", systemImage: "text.viewfinder", text: post.ocrText)
+                }
+                if !post.englishText.isEmpty {
+                    readBlock("English translation", systemImage: "character.bubble", text: post.englishText)
+                }
+                if let languageName {
+                    Label("Language: \(languageName)", systemImage: "globe")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
             }
-        } else {
-            Button("Add note", systemImage: "plus") { showNote = true }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.top, 8)
+        } label: {
+            Label("What Déjà View read", systemImage: "eye")
+                .font(.subheadline.weight(.semibold))
         }
+    }
+
+    private func readBlock(_ title: String, systemImage: String, text: String) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Label(title, systemImage: systemImage)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+            Text(text)
+                .font(.subheadline)
+                .textSelection(.enabled)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
+        .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 
     // MARK: Saving

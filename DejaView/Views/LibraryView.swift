@@ -42,6 +42,11 @@ struct LibraryView: View {
                 } else {
                     ScrollView {
                         VStack(alignment: .leading, spacing: 16) {
+                            Picker("Source", selection: $source) {
+                                ForEach(SourceFilter.allCases) { Text($0.rawValue).tag($0) }
+                            }
+                            .pickerStyle(.segmented)
+
                             ScrollView(.horizontal) {
                                 HStack {
                                     Button("All") { category = nil }
@@ -96,15 +101,6 @@ struct LibraryView: View {
                 }
             }
             .toolbar {
-                if !posts.isEmpty {
-                    Menu {
-                        Picker("Source", selection: $source) {
-                            ForEach(SourceFilter.allCases) { Text($0.rawValue).tag($0) }
-                        }
-                    } label: {
-                        Label("Filter by source", systemImage: source == .all ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
-                    }
-                }
                 Button("Save a post", systemImage: "plus") { showingAddLink = true }
             }
             .sheet(isPresented: $showingAddLink) { AddLinkView() }
