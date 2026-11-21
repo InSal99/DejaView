@@ -10,7 +10,7 @@
 
 ## Shared contract (identical in all three specs; change it only after telling the team)
 
-**App:** Déjà View ("You've seen it before. Now you can find it again."). Code name `DejaView` (no accent). Targets `DejaView` (app) and `DejaViewShare` (share extension), both with display name `Déjà View`. App Group `group.com.TEAMID.dejaview`. Xcode 27, iOS 27, Swift 6, Approachable Concurrency on. No third-party packages, no server, no CloudKit.
+**App:** Déjà View ("You've seen it before. Now you can find it again."). Code name `DejaView` (no accent). Targets `DejaView` (app) and `DejaViewShare` (share extension), both with display name `Déjà View`. App Group `group.com.H747JY2BA4.dejaview`. Xcode 27, iOS 27, Swift 6, Approachable Concurrency on. No third-party packages, no server, no CloudKit.
 
 **Capstone rules:** Track C. At least one `@Generable` type (B: `PostAnalysis`) and one `Tool` (C: `SearchSavedPostsTool`). Demo at 15:30, three minutes.
 

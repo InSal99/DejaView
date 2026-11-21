@@ -21,7 +21,7 @@ Three people (A: Capture, B: Understand, C: Find). Each person drives their own 
 1. Xcode 27 → New Project → iOS App → name `DejaView` (no accent), SwiftUI, Storage: None, iOS 27. General tab → Display Name `Déjà View`.
 2. Signing & Capabilities → your team.
 3. File → New → Target → Share Extension → `DejaViewShare`, iOS 27, same team, Display Name `Déjà View`.
-4. **App Groups** capability on both targets: `group.com.TEAMID.dejaview`. Put the real ID in `SPEC.md`.
+4. **App Groups** capability on both targets: `group.com.H747JY2BA4.dejaview`. Put the real ID in `SPEC.md`.
 5. Build settings for both targets: Swift 6.0, Approachable Concurrency Yes (match the sample).
 6. Create groups Shared, Services, Agent, Views. Files in `Shared/` get membership in **both** targets.
 7. Copy `WorkspaceAssistant-Lite` into `Reference/` next to the project (not in any target). Copy `SPEC.md` and `DESIGN.md` into the project root.
