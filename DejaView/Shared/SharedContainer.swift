@@ -2,8 +2,8 @@ import Foundation
 import SwiftData
 
 enum SharedContainer {
-    /// Replace TEAMID with the real team ID (same value as the App Groups capability on both targets).
-    static let appGroupID = "group.com.TEAMID.dejaview"
+    /// Must match the App Groups capability on both targets.
+    static let appGroupID = "group.com.H747JY2BA4.dejaview"
 
     static let container: ModelContainer = {
         let configuration = ModelConfiguration(
