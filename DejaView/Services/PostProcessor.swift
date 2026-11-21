@@ -41,8 +41,10 @@ final class PostProcessor {
             if post.imageData == nil { post.imageData = preview.imageData }
         }
 
-        // 2. OCR (Sprint 2)
-        // TODO(B4): if post.imageData != nil && post.ocrText.isEmpty { post.ocrText = await OCRService.read(...) }
+        // 2. OCR
+        if let imageData = post.imageData, post.ocrText.isEmpty {
+            post.ocrText = await OCRService.readText(from: imageData)
+        }
 
         // 3. Combined text
         let combined = [post.caption, post.ocrText, post.userNote]
