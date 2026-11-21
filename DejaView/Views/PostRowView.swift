@@ -68,7 +68,7 @@ struct PostRowView: View {
                                 .font(.caption2)
                                 .padding(.horizontal, 8)
                                 .padding(.vertical, 3)
-                                .background(.quaternary, in: Capsule())
+                                .surface(in: Capsule())
                         }
                     }
                     .lineLimit(1)

@@ -15,10 +15,12 @@ struct NoteSheet: View {
                     TextField("Add a note…", text: $draft, axis: .vertical)
                         .lineLimit(3...8)
                         .focused($focused)
+                        .listRowBackground(SurfaceRowBackground())
                 } footer: {
                     Text("Notes are saved on this device and are used when you search.")
                 }
             }
+            .surfaceForm()
             .dismissKeyboardOnTap()
             .navigationTitle(note.isEmpty ? "Add note" : "Edit note")
             .navigationBarTitleDisplayMode(.inline)

@@ -26,6 +26,9 @@ struct CategoryChip: View {
             .padding(.horizontal, 10)
             .padding(.vertical, 8)
             .foregroundStyle(selected ? Color.white : category.color)
-            .background(selected ? category.color : category.color.opacity(0.15), in: Capsule())
+            .background {
+                Capsule().fill(Color(.systemBackground))
+                Capsule().fill(selected ? category.color : category.color.opacity(0.15))
+            }
     }
 }

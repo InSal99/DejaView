@@ -152,7 +152,7 @@ struct PostDetailView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
-        .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .surface(in: RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 
     @ViewBuilder
@@ -184,7 +184,7 @@ struct PostDetailView: View {
                             .font(.caption)
                             .padding(.horizontal, 10)
                             .padding(.vertical, 6)
-                            .background(.quaternary, in: Capsule())
+                            .surface(in: Capsule())
                     }
                 }
             }
@@ -259,7 +259,7 @@ struct PostDetailView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(12)
-        .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .surface(in: RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 
     // MARK: Saving
