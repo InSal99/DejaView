@@ -25,7 +25,7 @@ struct ReviewListView: View {
                                             .clipShape(RoundedRectangle(cornerRadius: 10))
                                             .accessibilityHidden(true)
                                         VStack(alignment: .leading, spacing: 4) {
-                                            Text(post.summary.isEmpty ? (post.caption.isEmpty ? "Untitled post" : post.caption) : post.summary)
+                                            Text(post.displayTitle)
                                                 .lineLimit(2)
                                             if !post.statusMessage.isEmpty {
                                                 Text(post.statusMessage)

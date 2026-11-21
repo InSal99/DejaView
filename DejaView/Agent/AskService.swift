@@ -72,6 +72,17 @@ final class AskService {
         }
     }
 
+    /// Back to the empty Search screen. Ignored while a search is running.
+    func reset() {
+        guard !isResponding else { return }
+        answerText = ""
+        errorMessage = nil
+        library = nil
+        fallbackResults = []
+        usedFallback = false
+        hasAsked = false
+    }
+
     private func fallback(_ question: String, posts: [SavedPost]) {
         usedFallback = true
         let words = SearchEngine.keywords(fromRaw: question)

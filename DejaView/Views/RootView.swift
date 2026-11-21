@@ -7,12 +7,12 @@ struct RootView: View {
 
     var body: some View {
         TabView {
-            Tab("Library", systemImage: "square.grid.2x2") {
-                LibraryView()
+            Tab("Search", systemImage: "magnifyingglass") {
+                AskView()
             }
 
-            Tab("Ask", systemImage: "sparkle.magnifyingglass") {
-                AskView()
+            Tab("Library", systemImage: "square.grid.2x2") {
+                LibraryView()
             }
 
             Tab("Review", systemImage: "tray") {

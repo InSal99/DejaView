@@ -1,5 +1,6 @@
 import Foundation
 import FoundationModels
+import NaturalLanguage
 
 @Generable
 enum CategoryFilter: String, CaseIterable {
@@ -30,13 +31,27 @@ struct SearchResult: Identifiable {
 }
 
 enum SearchEngine {
+    static let maxKeywords = 8
+
+    /// Loaded once. Nil when the word embedding isn't available on this device.
+    nonisolated(unsafe) private static let wordEmbedding = NLEmbedding.wordEmbedding(for: .english)
+
+    /// Up to 3 words the embedding relates to `keyword`.
+    private static func relatedWords(for keyword: String) -> [String] {
+        guard keyword.count >= 3, let embedding = wordEmbedding else { return [] }
+        return embedding.neighbors(for: keyword, maximumCount: 3)
+            .filter { $0.1 < 1.0 }
+            .map { $0.0.lowercased() }
+            .filter { $0 != keyword }
+    }
+
     static func keywords(fromRaw text: String) -> [String] {
         let stopWords: Set<String> = ["the", "my", "posts", "saved", "i", "a", "from", "on", "about"]
         let words = text.lowercased().split { !$0.isLetter && !$0.isNumber }.map(String.init)
         var result: [String] = []
         for word in words where !stopWords.contains(word) && !result.contains(word) {
             result.append(word)
-            if result.count == 5 { break }
+            if result.count == maxKeywords { break }
         }
         return result
     }
@@ -45,7 +60,7 @@ enum SearchEngine {
         var keywords: [String] = []
         for word in query.keywords.flatMap({ Self.keywords(fromRaw: $0) }) where !keywords.contains(word) {
             keywords.append(word)
-            if keywords.count == 5 { break }
+            if keywords.count == maxKeywords { break }
         }
         var effectiveQuery = query
         var matches = matching(effectiveQuery, keywords: keywords, posts: posts, now: now)
@@ -83,6 +98,9 @@ enum SearchEngine {
         case .last30Days: start = calendar.date(byAdding: .day, value: -30, to: now)
         }
 
+        var related: [String: [String]] = [:]
+        for keyword in keywords { related[keyword] = relatedWords(for: keyword) }
+
         var scored: [(result: SearchResult, score: Int)] = []
         for post in posts {
             guard query.category == .any || post.category.rawValue == query.category.rawValue,
@@ -91,6 +109,9 @@ enum SearchEngine {
 
             let fields: [(name: String, text: String, weight: Int)] = [
                 ("tags", post.tags.joined(separator: " "), 3),
+                ("title", post.title, 3),
+                ("description", post.summaryDescription, 2),
+                ("key points", post.keyPoints.joined(separator: " "), 2),
                 ("summary", post.summary, 2),
                 ("caption", post.caption, 1),
                 ("image text", post.ocrText, 1),
@@ -100,9 +121,15 @@ enum SearchEngine {
             var score = 0
             var firstMatch: String?
             for keyword in keywords {
-                for field in fields where containsPrefix(keyword, in: field.text) {
+                for field in fields where matches(keyword, in: field.text) {
                     score += field.weight
                     if firstMatch == nil { firstMatch = "‘\(keyword)’ in \(field.name)" }
+                }
+                for related in related[keyword] ?? [] {
+                    for field in fields where matches(related, in: field.text) {
+                        score += max(1, field.weight / 2)
+                        if firstMatch == nil { firstMatch = "related: ‘\(related)’ for ‘\(keyword)’" }
+                    }
                 }
             }
             guard keywords.isEmpty || score > 0 else { continue }
@@ -126,11 +153,15 @@ enum SearchEngine {
         }.map(\.result)
     }
 
-    private static func containsPrefix(_ keyword: String, in text: String) -> Bool {
+    /// A keyword matches a word when either starts with the other and the shorter one has at least 4 letters
+    /// ("recipes" ~ "recipe", "design" ~ "designer"). Shorter keywords still match as a plain prefix.
+    private static func matches(_ keyword: String, in text: String) -> Bool {
+        guard !text.isEmpty else { return false }
         let words = text.lowercased().split { !$0.isLetter && !$0.isNumber }
-        if words.contains(where: { $0.hasPrefix(keyword) }) { return true }
-        guard keyword.count > 3, keyword.hasSuffix("s") else { return false }
-        let singular = keyword.dropLast()
-        return words.contains { $0.hasPrefix(singular) }
+        return words.contains { word in
+            let word = String(word)
+            if word.hasPrefix(keyword) { return true }
+            return min(word.count, keyword.count) >= 4 && keyword.hasPrefix(word)
+        }
     }
 }

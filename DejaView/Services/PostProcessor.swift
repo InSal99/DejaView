@@ -52,6 +52,9 @@ final class PostProcessor {
             .trimmingCharacters(in: .whitespacesAndNewlines)
         guard !combined.isEmpty else {
             post.summary = ""
+            post.title = ""
+            post.summaryDescription = ""
+            post.keyPoints = []
             post.status = .needsReview
             post.statusMessage = "No text found — add a note"
             post.processedWithAI = false
@@ -75,7 +78,12 @@ final class PostProcessor {
 
         do {
             let analysis = try await PostAnalyzer.analyze(text: text)
-            post.summary = analysis.summary.trimmingCharacters(in: .whitespacesAndNewlines)
+            post.title = analysis.title.trimmingCharacters(in: .whitespacesAndNewlines)
+            post.summaryDescription = analysis.summaryDescription.trimmingCharacters(in: .whitespacesAndNewlines)
+            post.keyPoints = analysis.keyPoints
+                .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+                .filter { !$0.isEmpty }
+            post.summary = post.summaryDescription   // old screens keep working
             post.category = analysis.category
             post.tags = Self.cleanTags(analysis.tags)
             post.status = analysis.needsReview ? .needsReview : .processed
@@ -87,10 +95,52 @@ final class PostProcessor {
         }
     }
 
+    // MARK: Refine
+
+    /// Applies the user's instruction to an already analyzed post.
+    /// Returns nil on success, or a sentence to show the user on failure. The post is left unchanged on failure.
+    func refine(_ post: SavedPost, instruction: String) async -> String? {
+        let request = instruction.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !request.isEmpty else { return "Tell me what to change." }
+        if let reason = PostAnalyzer.unavailableReason { return reason }
+
+        let combined = [post.caption, post.ocrText, post.userNote]
+            .joined(separator: "\n")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        let text = await fitToContext(Self.trimmed(post.englishText.isEmpty ? combined : post.englishText, maxCharacters: 1_500))
+        let current = PostAnalysis(
+            title: post.title,
+            summaryDescription: post.summaryDescription.isEmpty ? post.summary : post.summaryDescription,
+            keyPoints: post.keyPoints,
+            category: post.category,
+            tags: post.tags,
+            needsReview: post.status == .needsReview
+        )
+        do {
+            let result = try await PostAnalyzer.refine(post: text, current: current, instruction: String(request.prefix(300)))
+            post.title = result.title.trimmingCharacters(in: .whitespacesAndNewlines)
+            post.summaryDescription = result.summaryDescription.trimmingCharacters(in: .whitespacesAndNewlines)
+            post.summary = post.summaryDescription
+            post.keyPoints = result.keyPoints.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }.filter { !$0.isEmpty }
+            post.category = result.category
+            post.tags = Self.cleanTags(result.tags)
+            post.status = .processed
+            post.statusMessage = ""
+            post.processedWithAI = true
+            return nil
+        } catch {
+            return ModelErrors.message(for: ModelErrors.classify(error))
+        }
+    }
+
     // MARK: Fallback (model off or failed)
 
     private func fallback(_ post: SavedPost, text: String, message: String) {
-        post.summary = String(text.replacingOccurrences(of: "\n", with: " ").prefix(120))
+        let flat = text.replacingOccurrences(of: "\n", with: " ")
+        post.title = flat.split(separator: " ").prefix(6).joined(separator: " ")
+        post.summaryDescription = String(flat.prefix(120))
+        post.keyPoints = []
+        post.summary = post.summaryDescription
         post.tags = Self.hashtags(in: post.caption)
         post.category = .other
         post.status = .needsReview

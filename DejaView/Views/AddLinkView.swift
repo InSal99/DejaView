@@ -11,6 +11,7 @@ struct AddLinkView: View {
     @State private var errorMessage: String?
     @State private var pickedItem: PhotosPickerItem?
     @State private var isLoadingImage = false
+    @State private var showCamera = false
     @FocusState private var linkFocused: Bool
 
     var body: some View {
@@ -39,8 +40,18 @@ struct AddLinkView: View {
                         Label("Pick a screenshot", systemImage: "photo.on.rectangle")
                     }
                     .disabled(isLoadingImage)
+
+                    if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                        Button {
+                            showCamera = true
+                        } label: {
+                            Label("Take a photo", systemImage: "camera")
+                        }
+                        .disabled(isLoadingImage)
+                    }
                 }
             }
+            .dismissKeyboardOnTap()
             .navigationTitle("Save a post")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -56,6 +67,16 @@ struct AddLinkView: View {
                 if let item { Task { await saveScreenshot(item) } }
             }
             .onAppear(perform: prefillFromClipboard)
+            .fullScreenCover(isPresented: $showCamera) {
+                CameraPicker(
+                    onImage: { image in
+                        showCamera = false
+                        savePhoto(image)
+                    },
+                    onCancel: { showCamera = false }
+                )
+                .ignoresSafeArea()
+            }
         }
         .presentationDetents([.medium])
     }
@@ -89,6 +110,15 @@ struct AddLinkView: View {
               let jpeg = ImageTools.downscaledJPEG(data) else {
             errorMessage = "Couldn't read that image"
             pickedItem = nil
+            return
+        }
+        insertAndProcess(SavedPost(platform: .screenshot, imageData: jpeg))
+    }
+
+    private func savePhoto(_ image: UIImage) {
+        guard let data = image.jpegData(compressionQuality: 0.9),
+              let jpeg = ImageTools.downscaledJPEG(data) else {
+            errorMessage = "Couldn't read that photo"
             return
         }
         insertAndProcess(SavedPost(platform: .screenshot, imageData: jpeg))

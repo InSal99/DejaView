@@ -4,12 +4,26 @@ import SwiftData
 struct LibraryView: View {
     @Environment(\.modelContext) private var context
     @Query(sort: \SavedPost.savedAt, order: .reverse) private var posts: [SavedPost]
-    @State private var category: PostCategory?
+    @State private var source: SourceFilter = .all
     @State private var showingAddLink = false
-    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @State private var postToDelete: SavedPost?
+    @State private var errorMessage: String?
+
+    enum SourceFilter: String, CaseIterable, Identifiable {
+        case all = "All", posts = "Posts", screenshots = "Screenshots", links = "Links"
+        var id: Self { self }
+        func includes(_ kind: SourceKind) -> Bool {
+            switch self {
+            case .all: true
+            case .posts: kind == .post
+            case .screenshots: kind == .screenshot
+            case .links: kind == .link
+            }
+        }
+    }
 
     private var filteredPosts: [SavedPost] {
-        posts.filter { category == nil || $0.category == category }
+        posts.filter { source.includes($0.sourceKind) }
     }
 
     var body: some View {
@@ -24,32 +38,36 @@ struct LibraryView: View {
                         Button("Paste a link") { showingAddLink = true }
                     }
                 } else {
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: 16) {
-                            ScrollView(.horizontal) {
-                                HStack {
-                                    Button("All") { category = nil }
-                                        .buttonStyle(.borderedProminent)
-                                        .tint(category == nil ? .accentColor : .secondary)
-                                    ForEach(PostCategory.allCases.filter { candidate in posts.contains { $0.category == candidate } }, id: \.self) { candidate in
-                                        Button { category = candidate } label: {
-                                            CategoryChip(category: candidate, selected: category == candidate)
-                                        }
-                                        .buttonStyle(.plain)
-                                    }
-                                }
-                            }.scrollIndicators(.hidden)
-                            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: dynamicTypeSize.isAccessibilitySize ? 1 : 2), spacing: 12) {
-                                ForEach(filteredPosts) { post in
-                                    NavigationLink { PostDetailView(post: post) } label: { PostCardView(post: post) }
-                                        .buttonStyle(.plain)
+                    List {
+                        Section {
+                            Picker("Source", selection: $source) {
+                                ForEach(SourceFilter.allCases) { Text($0.rawValue).tag($0) }
+                            }
+                            .pickerStyle(.segmented)
+                            .listRowBackground(Color.clear)
+                            .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
+                        }
+                        Section {
+                            ForEach(filteredPosts) { post in
+                                NavigationLink {
+                                    PostDetailView(post: post)
+                                } label: {
+                                    PostRowView(post: post) { postToDelete = post }
                                 }
                             }
-                        }.padding(16)
+                            if filteredPosts.isEmpty {
+                                Text("Nothing here yet.")
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        if let errorMessage {
+                            Text(errorMessage).font(.footnote).foregroundStyle(.red)
+                        }
                     }
+                    .listStyle(.plain)
                 }
             }
-            .navigationTitle("Déjà View")
+            .navigationTitle("Library")
             .safeAreaInset(edge: .top) {
                 if let reason = AskService.unavailableReason {
                     ModelUnavailableBanner(reason: reason)
@@ -59,43 +77,20 @@ struct LibraryView: View {
             }
             .toolbar {
                 Button("Save a post", systemImage: "plus") { showingAddLink = true }
-                #if DEBUG
-                Button("Add sample posts", systemImage: "plus.rectangle.on.rectangle") { addSamplePosts() }
-                    .disabled(!posts.isEmpty)
-                #endif
             }
             .sheet(isPresented: $showingAddLink) { AddLinkView() }
+            .confirmationDialog("Delete this post?", isPresented: Binding(
+                get: { postToDelete != nil },
+                set: { if !$0 { postToDelete = nil } }
+            ), titleVisibility: .visible) {
+                Button("Delete", role: .destructive) {
+                    if let post = postToDelete {
+                        context.delete(post)
+                        do { try context.save(); errorMessage = nil } catch { context.rollback(); errorMessage = "Couldn't delete this post. Please try again." }
+                    }
+                    postToDelete = nil
+                }
+            }
         }
     }
-
-    #if DEBUG
-    private func addSamplePosts() {
-        let samples: [(String, String, PostCategory, Platform)] = [
-            ("Diera sekarang, kamu gagal jadi designer kalau hasilnya kalah sama AI", "A discussion about designers working with AI.", .design, .instagram),
-            ("Resep ayam geprek sambal bawang dengan nasi hangat", "A recipe for spicy smashed chicken and garlic sambal.", .foodRecipes, .tiktok),
-            ("A quiet weekend exploring Kyoto's side streets.", "A guide to exploring Kyoto on foot.", .travel, .instagram),
-            ("A practical guide to building a small app with Swift.", "Tips for building a Swift app.", .tech, .web),
-            ("Five ways to make a daily study habit stick.", "Simple ideas for a consistent study routine.", .tipsLearning, .threads),
-            ("A compact desk lamp for small spaces.", "A desk lamp suited to a small workspace.", .shopping, .facebook),
-            ("Films to watch on a rainy afternoon.", "A selection of films for a rainy day.", .entertainment, .x),
-            ("A few little moments from the weekend.", "A collection of weekend moments.", .other, .screenshot)
-        ]
-        for (index, sample) in samples.enumerated() {
-            let post = SavedPost(platform: sample.3)
-            post.caption = sample.0
-            post.summary = sample.1
-            post.category = sample.2
-            post.status = .processed
-            post.savedAt = Calendar.current.date(byAdding: .day, value: -index, to: .now) ?? .now
-            context.insert(post)
-        }
-        let review = SavedPost(platform: .tiktok)
-        review.caption = "wait for it 😂"
-        review.status = .needsReview
-        review.statusMessage = "Add a note to help identify this post."
-        review.savedAt = Calendar.current.date(byAdding: .day, value: -9, to: .now) ?? .now
-        context.insert(review)
-        do { try context.save() } catch { context.rollback() }
-    }
-    #endif
 }
