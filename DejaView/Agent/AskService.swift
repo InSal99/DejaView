@@ -21,7 +21,7 @@ final class AskService {
         if PostAnalyzer.forceUnavailable {
             return "Smart search is turned off (debug)."
         }
-        switch SystemLanguageModel.default.availability {
+        return switch SystemLanguageModel.default.availability {
         case .available: nil
         case .unavailable(.deviceNotEligible): "This device doesn't support Apple Intelligence."
         case .unavailable(.appleIntelligenceNotEnabled): "Turn on Apple Intelligence in Settings for smart search."
