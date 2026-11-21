@@ -21,9 +21,9 @@ struct PostCardView: View {
             }
             .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 8) {
-                Text(post.status == .pending ? "Processing…" : (post.summary.isEmpty ? post.caption : post.summary))
+                Text(post.status == .pending ? "Processing…" : post.displayTitle)
                     .font(.subheadline)
-                    .foregroundStyle(post.summary.isEmpty ? .secondary : .primary)
+                    .foregroundStyle(post.status == .pending ? .secondary : .primary)
                     .lineLimit(2)
                 CategoryChip(category: post.category)
                 Text(post.savedAt.staticAgo)
@@ -34,10 +34,10 @@ struct PostCardView: View {
             .padding([.horizontal, .bottom], 12)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 16))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(post.summary.isEmpty ? post.caption : post.summary), \(post.category.displayName), \(post.platform.displayName), \(post.savedAt.formatted(date: .abbreviated, time: .omitted))\(post.status == .needsReview ? ", Needs review" : "")")
+        .accessibilityLabel("\(post.displayTitle), \(post.category.displayName), \(post.platform.displayName), \(post.savedAt.formatted(date: .abbreviated, time: .omitted))\(post.status == .needsReview ? ", Needs review" : "")")
         .animation(reduceMotion ? nil : .smooth, value: post.statusRaw)
     }
 }

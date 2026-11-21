@@ -13,7 +13,7 @@ Read with `SPEC.md`. This file says how the app looks and feels; `SPEC.md` says 
 ## Rules
 - **Components:** `NavigationStack`, `TabView`, `LazyVGrid`, `List`, `.sheet`, `.searchable` / `TextField`, `ContentUnavailableView` for empty states, `PhotosPicker`.
 - **Type:** system font with text styles only (`.largeTitle`, `.title2`, `.headline`, `.body`, `.subheadline`, `.caption`). No fixed point sizes.
-- **Colour:** use the adaptive AccentColor asset for actions and the Design category, with semantic system surfaces and text so light and dark mode remain legible. Other category colours are system colours below.
+- **Colour:** system colours only. The accent is the default system blue (the empty `AccentColor` asset), with semantic system surfaces and text so light and dark mode stay legible. Category colours are the system colours below.
 - **Icons:** SF Symbols only. **Never use platform logos** (Instagram, TikTok, etc. are trademarks). Show the platform as a short text label.
 - **Spacing:** 16 pt screen margins, 12 pt grid gaps, 8 pt inside chips. Cards: corner radius 16, continuous style.
 - **Copy:** sentence case, short, friendly, no jargon ("Processing…", not "Inferencing").
@@ -23,7 +23,7 @@ One colour and one symbol per category, used everywhere: chips, card accents, fi
 
 | Case | Display name | Colour | SF Symbol |
 |---|---|---|---|
-| `design` | Design | adaptive brand blue (`AccentColor`) | `paintbrush.pointed` |
+| `design` | Design | `.purple` | `paintbrush.pointed` |
 | `foodRecipes` | Food & Recipes | `.orange` | `fork.knife` |
 | `travel` | Travel | `.teal` | `airplane` |
 | `tech` | Tech | `.blue` | `laptopcomputer` |

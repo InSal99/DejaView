@@ -9,6 +9,7 @@ struct LibraryView: View {
     @State private var showingAddLink = false
     @State private var postToDelete: SavedPost?
     @State private var errorMessage: String?
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     enum SourceFilter: String, CaseIterable, Identifiable {
         case all = "All", posts = "Posts", screenshots = "Screenshots", links = "Links"
@@ -39,36 +40,23 @@ struct LibraryView: View {
                         Button("Paste a link") { showingAddLink = true }
                     }
                 } else {
-                    List {
-                        Section {
-                            Picker("Source", selection: $source) {
-                                ForEach(SourceFilter.allCases) { Text($0.rawValue).tag($0) }
-                            }
-                            .pickerStyle(.menu)
-                            .listRowBackground(Color.clear)
-                            .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
-                            Picker("Category", selection: $category) {
-                                Text("All categories").tag(Optional<PostCategory>.none)
-                                ForEach(PostCategory.allCases, id: \.self) { category in
-                                    Label(category.displayName, systemImage: category.symbol).tag(Optional(category))
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 16) {
+                            ScrollView(.horizontal) {
+                                HStack {
+                                    Button("All") { category = nil }
+                                        .buttonStyle(.borderedProminent)
+                                        .tint(category == nil ? .accentColor : .secondary)
+                                    ForEach(PostCategory.allCases.filter { candidate in posts.contains { $0.category == candidate } }, id: \.self) { candidate in
+                                        Button { category = candidate } label: {
+                                            CategoryChip(category: candidate, selected: category == candidate)
+                                        }
+                                        .buttonStyle(.plain)
+                                    }
                                 }
                             }
-                            .pickerStyle(.menu)
-                            .listRowBackground(Color.clear)
-                            .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
-                        }
-                        Section {
-                            ForEach(filteredPosts) { post in
-                                NavigationLink {
-                                    PostDetailView(post: post)
-                                } label: {
-                                    PostRowView(post: post, showsCategory: true, showsOriginalMenu: false)
-                                }
-                                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                                    Button("Delete", systemImage: "trash") { postToDelete = post }
-                                        .tint(.red)
-                                }
-                            }
+                            .scrollIndicators(.hidden)
+
                             if filteredPosts.isEmpty {
                                 ContentUnavailableView {
                                     Label("No matching posts", systemImage: "line.3.horizontal.decrease.circle")
@@ -77,13 +65,26 @@ struct LibraryView: View {
                                 } actions: {
                                     Button("Clear filters") { source = .all; category = nil }
                                 }
+                            } else {
+                                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: dynamicTypeSize.isAccessibilitySize ? 1 : 2), spacing: 12) {
+                                    ForEach(filteredPosts) { post in
+                                        NavigationLink { PostDetailView(post: post) } label: { PostCardView(post: post) }
+                                            .buttonStyle(.plain)
+                                            .contextMenu {
+                                                if let url = originalURL(for: post) {
+                                                    Link(destination: url) { Label("Open original", systemImage: "arrow.up.right.square") }
+                                                }
+                                                Button("Delete", systemImage: "trash", role: .destructive) { postToDelete = post }
+                                            }
+                                    }
+                                }
+                            }
+                            if let errorMessage {
+                                Text(errorMessage).font(.footnote).foregroundStyle(.red)
                             }
                         }
-                        if let errorMessage {
-                            Text(errorMessage).font(.footnote).foregroundStyle(.red)
-                        }
+                        .padding(16)
                     }
-                    .listStyle(.plain)
                 }
             }
             .navigationTitle("Library")
@@ -95,6 +96,15 @@ struct LibraryView: View {
                 }
             }
             .toolbar {
+                if !posts.isEmpty {
+                    Menu {
+                        Picker("Source", selection: $source) {
+                            ForEach(SourceFilter.allCases) { Text($0.rawValue).tag($0) }
+                        }
+                    } label: {
+                        Label("Filter by source", systemImage: source == .all ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
+                    }
+                }
                 Button("Save a post", systemImage: "plus") { showingAddLink = true }
             }
             .sheet(isPresented: $showingAddLink) { AddLinkView() }
@@ -111,5 +121,11 @@ struct LibraryView: View {
                 }
             }
         }
+    }
+
+    private func originalURL(for post: SavedPost) -> URL? {
+        guard let urlString = post.urlString, let url = URL(string: urlString),
+              ["http", "https"].contains(url.scheme?.lowercased() ?? "") else { return nil }
+        return url
     }
 }
