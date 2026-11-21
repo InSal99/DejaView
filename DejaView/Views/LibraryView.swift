@@ -28,8 +28,6 @@ struct LibraryView: View {
         posts.filter { source.includes($0.sourceKind) && (category == nil || $0.category == category) }
     }
 
-    init() { SurfaceAppearance.apply() }
-
     var body: some View {
         NavigationStack {
             Group {

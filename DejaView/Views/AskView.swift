@@ -166,7 +166,7 @@ struct AskView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 14)
-        .surface(in: Capsule())
+        .background(Color(.secondarySystemBackground), in: Capsule())
         .padding(.horizontal, 16)
         .padding(.bottom, 8)
     }

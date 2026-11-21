@@ -1,5 +1,4 @@
 import SwiftUI
-import UIKit
 
 /// Tint used for every light surface (cards, chips, fields): the system blue at low opacity.
 extension Color {
@@ -30,12 +29,5 @@ extension View {
     /// Plain white form canvas so the light blue rows stand out.
     func surfaceForm() -> some View {
         scrollContentBackground(.hidden).background(Color(.systemBackground))
-    }
-}
-
-enum SurfaceAppearance {
-    /// Segmented pickers use a UIKit track colour; make it light blue too.
-    static func apply() {
-        UISegmentedControl.appearance().backgroundColor = UIColor.systemBlue.withAlphaComponent(0.12)
     }
 }

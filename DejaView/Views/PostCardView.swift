@@ -36,7 +36,7 @@ struct PostCardView: View {
             .padding([.horizontal, .bottom], 12)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .surface(in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(post.displayTitle), \(post.category.displayName), \(post.platform.displayName), \(post.savedAt.formatted(date: .abbreviated, time: .omitted))\(post.status == .needsReview ? ", Needs review" : "")")
